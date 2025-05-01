@@ -181,6 +181,7 @@ export function useChat(currentUserId = 0) {
     currentMessages,
     newMessage,
     isChatOpen,
+    messages, // Ensure messages is included in the return object
     handleSelectMember,
     setNewMessage,
     handleSendMessage,

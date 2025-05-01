@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,6 +24,7 @@ const ChatSidebar = ({ currentUserId = 0 }: ChatSidebarProps) => {
     handleSendMessage,
     toggleChat,
     closeChat,
+    messages, // Make sure to destructure messages from useChat
   } = useChat(currentUserId);
 
   const isMobile = useIsMobile();
