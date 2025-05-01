@@ -9,7 +9,9 @@ import DocumentsList from "@/components/dashboard/DocumentsList";
 import UsersList from "@/components/dashboard/UsersList";
 import UserProfile from "@/components/dashboard/UserProfile";
 import Settings from "@/components/dashboard/Settings";
+import ChatSidebar from "@/components/dashboard/ChatSidebar";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 
 type UserData = {
   name: string;
@@ -23,6 +25,7 @@ const Dashboard = () => {
   const [currentUser, setCurrentUser] = useState<UserData | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
   const [sidebarOpen, setSidebarOpen] = useState(true);
+  const isMobile = useIsMobile();
   
   useEffect(() => {
     // Check if user is logged in
@@ -44,7 +47,12 @@ const Dashboard = () => {
       sessionStorage.removeItem("currentUser");
       navigate("/login");
     }
-  }, [navigate, toast]);
+    
+    // If on mobile, close the sidebar by default
+    if (isMobile) {
+      setSidebarOpen(false);
+    }
+  }, [navigate, toast, isMobile]);
 
   const handleLogout = () => {
     sessionStorage.removeItem("currentUser");
@@ -74,7 +82,7 @@ const Dashboard = () => {
         onLogout={handleLogout}
       />
       
-      <main className="flex-1 overflow-y-auto p-4 md:p-6">
+      <main className={`flex-1 overflow-y-auto p-4 md:p-6 ${isMobile ? "" : "mr-[80px]"}`}>
         <div className="container mx-auto">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
             <div className="flex items-center justify-between">
@@ -130,6 +138,8 @@ const Dashboard = () => {
           </Tabs>
         </div>
       </main>
+      
+      <ChatSidebar currentUserId={0} />
     </div>
   );
 };
