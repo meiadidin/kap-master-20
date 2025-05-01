@@ -82,11 +82,11 @@ const Dashboard = () => {
         onLogout={handleLogout}
       />
       
-      <main className={`flex-1 overflow-y-auto p-4 md:p-6 ${isMobile ? "" : "mr-[80px]"}`}>
-        <div className="container mx-auto">
+      <main className={`flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 ${isMobile ? "pt-14" : "mr-[3.5rem]"}`}>
+        <div className="container mx-auto max-w-7xl">
           <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h1 className="text-2xl font-bold text-kap-navy">Dashboard</h1>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <h1 className="text-xl sm:text-2xl font-bold text-kap-navy">Dashboard</h1>
               <TabsList className="hidden md:flex">
                 <TabsTrigger value="overview">Overview</TabsTrigger>
                 {(currentUser.role === "admin" || currentUser.role === "manager") && (
@@ -108,6 +108,35 @@ const Dashboard = () => {
                 <TabsTrigger value="profile">Profil</TabsTrigger>
                 <TabsTrigger value="settings">Pengaturan</TabsTrigger>
               </TabsList>
+              
+              {/* Mobile tabs dropdown */}
+              <div className="md:hidden w-full">
+                <select 
+                  className="w-full bg-white border border-gray-300 rounded-md py-2 px-3"
+                  value={activeTab}
+                  onChange={(e) => setActiveTab(e.target.value)}
+                >
+                  <option value="overview">Overview</option>
+                  {(currentUser.role === "admin" || currentUser.role === "manager") && (
+                    <>
+                      <option value="clients">Klien</option>
+                      <option value="documents">Dokumen</option>
+                      <option value="users">Pengguna</option>
+                    </>
+                  )}
+                  {currentUser.role === "auditor" && (
+                    <>
+                      <option value="clients">Klien</option>
+                      <option value="documents">Dokumen</option>
+                    </>
+                  )}
+                  {currentUser.role === "client" && (
+                    <option value="documents">Dokumen</option>
+                  )}
+                  <option value="profile">Profil</option>
+                  <option value="settings">Pengaturan</option>
+                </select>
+              </div>
             </div>
 
             <TabsContent value="overview" className="space-y-4">

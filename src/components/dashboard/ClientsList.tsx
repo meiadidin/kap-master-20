@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,6 +36,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
 import { Search, Plus, Trash2, Edit, Check, X } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Link, useNavigate } from "react-router-dom";
 
 // Dummy clients data
 const dummyClients = [
@@ -189,6 +189,7 @@ interface Client {
 
 const ClientsList = ({ currentUser }: { currentUser: UserData }) => {
   const { toast } = useToast();
+  const navigate = useNavigate();
   const [clients, setClients] = useState<Client[]>(dummyClients);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterStatus, setFilterStatus] = useState("all");
@@ -307,6 +308,11 @@ const ClientsList = ({ currentUser }: { currentUser: UserData }) => {
     }
   };
   
+  // Handle client click to navigate to documents page
+  const handleClientClick = (clientId: number) => {
+    navigate(`/clients/${clientId}`);
+  };
+  
   // Filter and search clients
   const filteredClients = clients.filter(client => {
     // Apply status filter
@@ -384,7 +390,12 @@ const ClientsList = ({ currentUser }: { currentUser: UserData }) => {
                 {filteredClients.length > 0 ? (
                   filteredClients.map((client) => (
                     <TableRow key={client.id}>
-                      <TableCell className="font-medium">{client.name}</TableCell>
+                      <TableCell 
+                        className="font-medium cursor-pointer hover:text-kap-blue hover:underline"
+                        onClick={() => handleClientClick(client.id)}
+                      >
+                        {client.name}
+                      </TableCell>
                       <TableCell>{client.industry}</TableCell>
                       <TableCell>
                         <div>{client.contact}</div>
@@ -420,9 +431,9 @@ const ClientsList = ({ currentUser }: { currentUser: UserData }) => {
                           <Button
                             variant="ghost"
                             size="sm"
-                            onClick={() => openEditClientDialog(client)}
+                            onClick={() => handleClientClick(client.id)}
                           >
-                            Lihat Detail
+                            Lihat Dokumen
                           </Button>
                         )}
                       </TableCell>

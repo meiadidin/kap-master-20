@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -19,12 +20,12 @@ const ChatSidebar = ({ currentUserId = 0 }: ChatSidebarProps) => {
     currentMessages,
     newMessage,
     isChatOpen,
+    messages, // Make sure to destructure messages from useChat
     handleSelectMember,
     setNewMessage,
     handleSendMessage,
     toggleChat,
     closeChat,
-    messages, // Make sure to destructure messages from useChat
   } = useChat(currentUserId);
 
   const isMobile = useIsMobile();
@@ -52,7 +53,7 @@ const ChatSidebar = ({ currentUserId = 0 }: ChatSidebarProps) => {
     <div
       className={`${
         isExpanded ? "w-72 md:w-80" : "w-12 md:w-14"
-      } h-screen bg-white border-l border-gray-200 flex flex-col fixed right-0 top-0 transition-all duration-300 z-10`}
+      } h-screen bg-white border-l border-gray-200 flex flex-col fixed right-0 top-0 transition-all duration-300 z-30`}
     >
       <div className="flex items-center p-2 border-b border-gray-200 justify-between">
         {isExpanded && <h2 className="font-semibold text-lg">Chat</h2>}
@@ -104,7 +105,7 @@ const ChatSidebar = ({ currentUserId = 0 }: ChatSidebarProps) => {
                         </p>
                       </div>
                     </div>
-                    {messages[member.id]?.length > 0 && (
+                    {messages && member.id in messages && messages[member.id]?.length > 0 && (
                       <div className="h-5 w-5 bg-kap-navy rounded-full flex items-center justify-center">
                         <span className="text-xs text-white">
                           {messages[member.id]?.length || 0}

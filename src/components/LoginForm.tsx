@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,7 @@ import { useNavigate } from "react-router-dom";
 const dummyUsers = [
   { email: "admin@kapgar.com", password: "admin123", role: "admin", name: "Admin Utama" },
   { email: "admin2@kapgar.com", password: "admin123", role: "admin", name: "Admin Sekunder" },
-  { email: "manager@kapgar.com", password: "manager123", role: "manager", name: "Manajer Tim" },
+  // Removed manager@kapgar.com as requested
   { email: "auditor1@kapgar.com", password: "audit123", role: "auditor", name: "Auditor Senior" },
   { email: "auditor2@kapgar.com", password: "audit123", role: "auditor", name: "Auditor Junior" },
   { email: "client1@example.com", password: "client123", role: "client", name: "PT Maju Bersama" },
