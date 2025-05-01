@@ -10,8 +10,8 @@ const Footer = () => {
           {/* Company Info */}
           <div>
             <div className="flex items-center mb-4">
-              <span className="text-white font-poppins font-bold text-2xl">KAP</span>
-              <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">Indonesia</span>
+              <span className="text-white font-poppins font-bold text-2xl">KAP MGI GAR</span>
+              <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">SURABAYA</span>
             </div>
             <p className="text-gray-300 mb-4">
               Memberikan solusi akuntansi profesional dan terpercaya untuk membantu bisnis Anda berkembang dengan dasar keuangan yang kuat.
@@ -98,6 +98,11 @@ const Footer = () => {
                   Kontak
                 </Link>
               </li>
+              <li>
+                <Link to="/login" className="text-gray-300 hover:text-kap-gold transition-colors">
+                  Login
+                </Link>
+              </li>
             </ul>
           </div>
 
@@ -117,7 +122,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center">
                 <Mail className="mr-2 text-kap-gold flex-shrink-0" size={18} />
-                <span className="text-gray-300">info@kapindonesia.co.id</span>
+                <span className="text-gray-300">info@kapgarsurabaya.co.id</span>
               </div>
             </div>
           </div>
@@ -125,7 +130,7 @@ const Footer = () => {
 
         {/* Copyright */}
         <div className="border-t border-gray-700 pt-6 mt-6 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} KAP Indonesia. Hak Cipta Dilindungi.</p>
+          <p>&copy; {new Date().getFullYear()} KAP MGI GAR SURABAYA. Hak Cipta Dilindungi.</p>
         </div>
       </div>
     </footer>

@@ -10,6 +10,8 @@ import Services from "./pages/Services";
 import Team from "./pages/Team";
 import Contact from "./pages/Contact";
 import Login from "./pages/Login";
+import ForgotPassword from "./pages/ForgotPassword";
+import Dashboard from "./pages/Dashboard";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
@@ -22,21 +24,39 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
-        <div className="flex flex-col min-h-screen">
-          <Navbar />
-          <main className="flex-grow">
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/tentang-kami" element={<AboutUs />} />
-              <Route path="/layanan" element={<Services />} />
-              <Route path="/tim-kami" element={<Team />} />
-              <Route path="/kontak" element={<Contact />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </main>
-          <Footer />
-        </div>
+        <Routes>
+          <Route 
+            path="/dashboard/*" 
+            element={<Dashboard />} 
+          />
+          <Route 
+            path="/login" 
+            element={<Login />} 
+          />
+          <Route 
+            path="/lupa-password" 
+            element={<ForgotPassword />} 
+          />
+          <Route 
+            path="*" 
+            element={
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow">
+                  <Routes>
+                    <Route path="/" element={<Index />} />
+                    <Route path="/tentang-kami" element={<AboutUs />} />
+                    <Route path="/layanan" element={<Services />} />
+                    <Route path="/tim-kami" element={<Team />} />
+                    <Route path="/kontak" element={<Contact />} />
+                    <Route path="*" element={<NotFound />} />
+                  </Routes>
+                </main>
+                <Footer />
+              </div>
+            } 
+          />
+        </Routes>
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>

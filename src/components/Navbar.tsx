@@ -16,8 +16,8 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center">
-            <span className="text-kap-navy font-poppins font-bold text-2xl">KAP</span>
-            <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">Indonesia</span>
+            <span className="text-kap-navy font-poppins font-bold text-2xl">KAP MGI GAR</span>
+            <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">SURABAYA</span>
           </Link>
 
           {/* Desktop Navigation */}

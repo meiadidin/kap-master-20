@@ -9,8 +9,8 @@ const Login = () => {
         <div className="bg-kap-navy p-6">
           <div className="flex justify-center">
             <div className="text-center">
-              <span className="text-white font-poppins font-bold text-2xl">KAP</span>
-              <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">Indonesia</span>
+              <span className="text-white font-poppins font-bold text-2xl">KAP MGI GAR</span>
+              <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">SURABAYA</span>
             </div>
           </div>
         </div>
@@ -32,6 +32,11 @@ const Login = () => {
                 Hubungi kami
               </Link>{" "}
               untuk registrasi
+            </p>
+            <p className="mt-2 text-gray-600">
+              <Link to="/lupa-password" className="text-kap-blue hover:underline">
+                Lupa Password?
+              </Link>
             </p>
           </div>
         </div>
