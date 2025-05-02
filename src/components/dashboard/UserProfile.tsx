@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,14 +7,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { useToast } from "@/hooks/use-toast";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Shield, Briefcase, Mail, Phone, MapPin, Calendar, Edit } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { Mail, Phone, MapPin, Pencil } from "lucide-react";
 
 type UserData = {
   name: string;
@@ -26,320 +24,263 @@ type UserData = {
 const UserProfile = ({ currentUser }: { currentUser: UserData }) => {
   const { toast } = useToast();
   const [isEditing, setIsEditing] = useState(false);
+  
+  // User profile demo data
   const [profileData, setProfileData] = useState({
-    fullName: currentUser.name,
+    name: currentUser.name,
     email: currentUser.email,
+    role: currentUser.role,
+    position: getRoleDescription(currentUser.role),
     phone: "081234567890",
-    position: currentUser.role === "admin" ? "Administrator" : 
-             currentUser.role === "manager" ? "Manajer" :
-             currentUser.role === "auditor" ? "Auditor Senior" : 
-             currentUser.role === "mitra" ? "Mitra Utama" : "Klien",
     address: "Jl. HR. Rasuna Said Blok X-5 Kav. 2-3, Jakarta Selatan",
-    bio: "Profesional berpengalaman di bidang akuntansi dan audit dengan fokus pada pengembangan layanan terbaik untuk klien."
+    about: "Profesional berpengalaman di bidang akuntansi dan audit dengan fokus pada pengembangan layanan terbaik untuk klien."
   });
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setProfileData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+  function getRoleDescription(role: string): string {
+    const roles: Record<string, string> = {
+      "admin": "Administrator",
+      "manager": "Manager",
+      "auditor": "Auditor",
+      "client": "Klien",
+      "mitra": "Mitra",
+      "managingpartner": "Managing Partner",
+      "partner": "Partner"
+    };
+    
+    return roles[role] || role;
+  }
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(part => part[0])
+      .join('')
+      .toUpperCase()
+      .substring(0, 2);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    // Simulate saving profile data
-    setTimeout(() => {
-      setIsEditing(false);
-      
-      toast({
-        title: "Profil Diperbarui",
-        description: "Informasi profil Anda telah berhasil diperbarui.",
-      });
-    }, 1000);
+  const handleSaveProfile = () => {
+    // In a real app, this would save to backend
+    setIsEditing(false);
+    toast({
+      title: "Profil Berhasil Disimpan",
+      description: "Perubahan pada profil Anda telah disimpan.",
+    });
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <div className="flex justify-between items-center">
-            <div>
-              <CardTitle>Profil Pengguna</CardTitle>
-              <CardDescription>
-                Kelola informasi profil akun Anda
-              </CardDescription>
-            </div>
-            <Button 
-              variant={isEditing ? "outline" : "default"}
-              onClick={() => setIsEditing(!isEditing)}
-            >
-              {isEditing ? "Batal" : (
-                <>
-                  <Edit className="mr-2 h-4 w-4" />
-                  Edit Profil
-                </>
-              )}
-            </Button>
+    <Card>
+      <CardHeader>
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+          <div>
+            <CardTitle>Profil Pengguna</CardTitle>
+            <CardDescription>
+              Kelola informasi profil akun Anda
+            </CardDescription>
           </div>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="personal" className="w-full">
-            <TabsList className="mb-6 grid w-full grid-cols-2 md:grid-cols-3 lg:max-w-md">
-              <TabsTrigger value="personal">Informasi Pribadi</TabsTrigger>
-              <TabsTrigger value="security">Keamanan</TabsTrigger>
-              {currentUser.role !== "client" && (
-                <TabsTrigger value="professional">Profesional</TabsTrigger>
-              )}
-            </TabsList>
-            
-            {/* Personal Information */}
-            <TabsContent value="personal" className="space-y-6">
-              {isEditing ? (
-                <form onSubmit={handleSubmit} className="space-y-6">
+          <Button 
+            className="mt-4 md:mt-0" 
+            onClick={() => setIsEditing(!isEditing)}
+          >
+            <Pencil size={18} className="mr-2" />
+            Edit Profil
+          </Button>
+        </div>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="personal">
+          <TabsList className="mb-6">
+            <TabsTrigger value="personal">Informasi Pribadi</TabsTrigger>
+            <TabsTrigger value="security">Keamanan</TabsTrigger>
+            <TabsTrigger value="professional">Profesional</TabsTrigger>
+          </TabsList>
+
+          {/* Personal Information Tab */}
+          <TabsContent value="personal">
+            <div className="space-y-6">
+              <div className="flex flex-col md:flex-row gap-8 items-start">
+                <div className="flex flex-col items-center">
+                  <Avatar className="h-28 w-28">
+                    <AvatarFallback className="bg-kap-navy text-white text-2xl">
+                      {getInitials(profileData.name)}
+                    </AvatarFallback>
+                  </Avatar>
+                </div>
+
+                <div className="space-y-4 flex-1">
+                  <div>
+                    <h2 className="text-2xl font-bold">{profileData.name}</h2>
+                    <p className="text-gray-500">{profileData.position}</p>
+                  </div>
+
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="fullName">Nama Lengkap</Label>
-                        <Input
-                          id="fullName"
-                          name="fullName"
-                          value={profileData.fullName}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="email">Email</Label>
-                        <Input
-                          id="email"
-                          name="email"
-                          value={profileData.email}
-                          onChange={handleInputChange}
-                          disabled
-                          type="email"
-                        />
+                    <div className="flex items-start space-x-3">
+                      <Mail className="text-gray-400 mt-1" size={20} />
+                      <div>
+                        <p className="text-gray-500">Email</p>
+                        <p>{profileData.email}</p>
                       </div>
                     </div>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div className="space-y-2">
-                        <Label htmlFor="phone">Nomor Telepon</Label>
-                        <Input
-                          id="phone"
-                          name="phone"
-                          value={profileData.phone}
-                          onChange={handleInputChange}
-                        />
-                      </div>
-                      <div className="space-y-2">
-                        <Label htmlFor="position">Jabatan</Label>
-                        <Input
-                          id="position"
-                          name="position"
-                          value={profileData.position}
-                          onChange={handleInputChange}
-                          disabled={["admin", "manager", "auditor", "client", "mitra"].includes(currentUser.role)}
-                        />
+
+                    <div className="flex items-start space-x-3">
+                      <Phone className="text-gray-400 mt-1" size={20} />
+                      <div>
+                        <p className="text-gray-500">Nomor Telepon</p>
+                        <p>{profileData.phone}</p>
                       </div>
                     </div>
-                    
+
+                    <div className="flex items-start space-x-3">
+                      <MapPin className="text-gray-400 mt-1" size={20} />
+                      <div>
+                        <p className="text-gray-500">Alamat</p>
+                        <p>{profileData.address}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-gray-500 mb-2">Tentang Saya</p>
+                <p>{profileData.about}</p>
+              </div>
+
+              {isEditing && (
+                <div className="space-y-4 pt-4 border-t">
+                  <h3 className="font-semibold">Edit Informasi Pribadi</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="address">Alamat</Label>
-                      <Input
-                        id="address"
-                        name="address"
-                        value={profileData.address}
-                        onChange={handleInputChange}
+                      <label className="text-sm font-medium">Nama Lengkap</label>
+                      <Input 
+                        value={profileData.name} 
+                        onChange={(e) => setProfileData({...profileData, name: e.target.value})}
                       />
                     </div>
-                    
                     <div className="space-y-2">
-                      <Label htmlFor="bio">Biografi Singkat</Label>
-                      <Textarea
-                        id="bio"
-                        name="bio"
-                        value={profileData.bio}
-                        onChange={handleInputChange}
+                      <label className="text-sm font-medium">Email</label>
+                      <Input 
+                        value={profileData.email} 
+                        onChange={(e) => setProfileData({...profileData, email: e.target.value})}
+                        disabled
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Nomor Telepon</label>
+                      <Input 
+                        value={profileData.phone} 
+                        onChange={(e) => setProfileData({...profileData, phone: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Alamat</label>
+                      <Input 
+                        value={profileData.address} 
+                        onChange={(e) => setProfileData({...profileData, address: e.target.value})}
+                      />
+                    </div>
+                    <div className="space-y-2 md:col-span-2">
+                      <label className="text-sm font-medium">Tentang Saya</label>
+                      <Textarea 
+                        value={profileData.about} 
+                        onChange={(e) => setProfileData({...profileData, about: e.target.value})}
                         rows={4}
                       />
                     </div>
                   </div>
-                  
-                  <div className="flex justify-end space-x-2">
-                    <Button 
-                      type="button" 
-                      variant="outline" 
-                      onClick={() => setIsEditing(false)}
-                    >
+
+                  <div className="flex justify-end space-x-2 pt-2">
+                    <Button variant="outline" onClick={() => setIsEditing(false)}>
                       Batal
                     </Button>
-                    <Button type="submit">
+                    <Button onClick={handleSaveProfile}>
                       Simpan Perubahan
                     </Button>
                   </div>
-                </form>
-              ) : (
-                <div className="space-y-6">
-                  <div className="flex items-center space-x-6">
-                    <Avatar className="h-24 w-24 border-2">
-                      <AvatarFallback className="text-xl bg-kap-navy text-white">
-                        {profileData.fullName.split(' ').map(word => word[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    
-                    <div>
-                      <h2 className="text-xl font-semibold">{profileData.fullName}</h2>
-                      <div className="flex items-center text-sm text-gray-500 mt-1">
-                        <Shield size={16} className="mr-1" />
-                        <span>{profileData.position}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <Separator />
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-8">
-                    <div className="flex items-start">
-                      <Mail className="h-5 w-5 text-gray-500 mt-0.5 mr-3" />
-                      <div>
-                        <p className="text-sm text-gray-500">Email</p>
-                        <p className="font-medium">{profileData.email}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start">
-                      <Phone className="h-5 w-5 text-gray-500 mt-0.5 mr-3" />
-                      <div>
-                        <p className="text-sm text-gray-500">Nomor Telepon</p>
-                        <p className="font-medium">{profileData.phone}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-start col-span-1 md:col-span-2">
-                      <MapPin className="h-5 w-5 text-gray-500 mt-0.5 mr-3" />
-                      <div>
-                        <p className="text-sm text-gray-500">Alamat</p>
-                        <p className="font-medium">{profileData.address}</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div>
-                    <h3 className="font-medium mb-2">Tentang Saya</h3>
-                    <p className="text-gray-700">{profileData.bio}</p>
-                  </div>
                 </div>
               )}
-            </TabsContent>
-            
-            {/* Security Tab */}
-            <TabsContent value="security" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Ubah Password</CardTitle>
-                  <CardDescription>
-                    Perbarui password akun Anda untuk keamanan yang lebih baik
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="currentPassword">Password Saat Ini</Label>
-                      <Input id="currentPassword" type="password" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="newPassword">Password Baru</Label>
-                      <Input id="newPassword" type="password" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirmPassword">Konfirmasi Password Baru</Label>
-                      <Input id="confirmPassword" type="password" />
-                    </div>
-                    <Button>Perbarui Password</Button>
-                  </form>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Login Dua Faktor</CardTitle>
-                  <CardDescription>
-                    Tingkatkan keamanan akun Anda dengan verifikasi dua langkah
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">Autentikasi Dua Faktor</h3>
-                      <p className="text-sm text-gray-500">Lindungi akun Anda dengan kode verifikasi tambahan</p>
-                    </div>
-                    <Button variant="outline">Aktifkan</Button>
+            </div>
+          </TabsContent>
+
+          {/* Security Tab */}
+          <TabsContent value="security">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Keamanan Akun</h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Password Saat Ini</label>
+                    <Input type="password" placeholder="Masukkan password saat ini" />
                   </div>
-                </CardContent>
-              </Card>
-            </TabsContent>
-            
-            {/* Professional Tab */}
-            {currentUser.role !== "client" && (
-              <TabsContent value="professional" className="space-y-6">
-                <Card>
-                  <CardHeader>
-                    <CardTitle className="text-lg">Informasi Profesional</CardTitle>
-                    <CardDescription>
-                      Detail profesional dan informasi karir Anda
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="space-y-4">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                      <div className="flex items-start">
-                        <Briefcase className="h-5 w-5 text-gray-500 mt-0.5 mr-3" />
-                        <div>
-                          <p className="text-sm text-gray-500">Jabatan</p>
-                          <p className="font-medium">{profileData.position}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-start">
-                        <Calendar className="h-5 w-5 text-gray-500 mt-0.5 mr-3" />
-                        <div>
-                          <p className="text-sm text-gray-500">Bergabung Sejak</p>
-                          <p className="font-medium">15 Januari 2020</p>
-                        </div>
-                      </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Password Baru</label>
+                    <Input type="password" placeholder="Masukkan password baru" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Konfirmasi Password Baru</label>
+                    <Input type="password" placeholder="Konfirmasi password baru" />
+                  </div>
+                </div>
+                <div className="pt-2">
+                  <Button>Ubah Password</Button>
+                </div>
+              </div>
+
+              <div className="border-t pt-6 space-y-4">
+                <h3 className="text-lg font-medium">Verifikasi Dua Faktor</h3>
+                <p className="text-gray-500">
+                  Tambahkan lapisan keamanan tambahan ke akun Anda dengan verifikasi dua faktor.
+                </p>
+                <Button variant="outline">Aktifkan Verifikasi Dua Faktor</Button>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Professional Tab */}
+          <TabsContent value="professional">
+            <div className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-lg font-medium">Informasi Profesional</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Jabatan</label>
+                    <Input value={profileData.position} disabled />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Departemen</label>
+                    <Input placeholder="Finance & Accounting" disabled />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Tanggal Bergabung</label>
+                    <Input placeholder="01/01/2020" disabled />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-sm font-medium">Status Karyawan</label>
+                    <Input placeholder="Tetap" disabled />
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t pt-6 space-y-4">
+                <h3 className="text-lg font-medium">Sertifikasi & Lisensi</h3>
+                <div className="space-y-2">
+                  {currentUser.role === "managingpartner" || currentUser.role === "partner" ? (
+                    <div className="rounded-lg border p-4">
+                      <p className="font-medium">Certified Public Accountant (CPA)</p>
+                      <p className="text-sm text-gray-500">Dikeluarkan oleh: Institut Akuntan Publik Indonesia</p>
+                      <p className="text-sm text-gray-500">Tanggal Berlaku: 01/01/2020 - 31/12/2025</p>
                     </div>
-                    
-                    <div className="space-y-2 mt-4">
-                      <h3 className="font-medium">Spesialisasi</h3>
-                      <div className="flex flex-wrap gap-2">
-                        <div className="bg-kap-light text-kap-navy px-3 py-1 rounded-full text-sm">
-                          Audit Keuangan
-                        </div>
-                        <div className="bg-kap-light text-kap-navy px-3 py-1 rounded-full text-sm">
-                          Perpajakan
-                        </div>
-                        <div className="bg-kap-light text-kap-navy px-3 py-1 rounded-full text-sm">
-                          Konsultasi Bisnis
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-2 mt-4">
-                      <h3 className="font-medium">Sertifikasi</h3>
-                      <ul className="list-disc list-inside space-y-1 text-gray-700">
-                        <li>Certified Public Accountant (CPA)</li>
-                        <li>Chartered Accountant (CA)</li>
-                        <li>Bersertifikat Konsultan Pajak (BKP)</li>
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
-              </TabsContent>
-            )}
-          </Tabs>
-        </CardContent>
-      </Card>
-    </div>
+                  ) : (
+                    <p className="text-gray-500 italic">Tidak ada sertifikasi yang ditambahkan.</p>
+                  )}
+                </div>
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -14,7 +14,6 @@ import {
 
 import ClientsList from "@/components/dashboard/ClientsList";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
-import ChatSidebar from "@/components/dashboard/ChatSidebar";
 
 // Import komponen untuk Managing Partner dan Partner
 import ManagingPartnerKPI from "@/components/dashboard/ManagingPartnerKPI";
@@ -22,6 +21,10 @@ import PartnerPerformance from "@/components/dashboard/PartnerPerformance";
 import FinancialMetrics from "@/components/dashboard/FinancialMetrics";
 import TeamManagement from "@/components/dashboard/TeamManagement";
 import AuditSchedule from "@/components/dashboard/AuditSchedule";
+import DocumentsList from "@/components/dashboard/DocumentsList";
+import UsersList from "@/components/dashboard/UsersManagement";
+import UserProfile from "@/components/dashboard/UserProfile";
+import UserSettings from "@/components/dashboard/UserSettings";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -74,6 +77,8 @@ const Dashboard = () => {
         { icon: Building, label: "Metrik Finansial", path: "/dashboard/financial-metrics" },
         { icon: Briefcase, label: "Manajemen Tim", path: "/dashboard/team-management" },
         { icon: Clipboard, label: "Jadwal Audit", path: "/dashboard/audit-schedule" },
+        { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+        { icon: User, label: "Profil", path: "/dashboard/profile" },
         { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
       ];
     }
@@ -85,14 +90,28 @@ const Dashboard = () => {
         { icon: BarChart, label: "KPI", path: "/dashboard/kpi" },
         { icon: Briefcase, label: "Manajemen Tim", path: "/dashboard/team-management" },
         { icon: Clipboard, label: "Jadwal Audit", path: "/dashboard/audit-schedule" },
+        { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+        { icon: User, label: "Profil", path: "/dashboard/profile" },
         { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
       ];
     }
     
-    // Default menu untuk peran lain
+    // Khusus untuk Admin
+    if (currentUser.role === "admin") {
+      return [
+        ...commonItems,
+        { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+        { icon: Users, label: "Pengguna", path: "/dashboard/users" },
+        { icon: User, label: "Profil", path: "/dashboard/profile" },
+        { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
+      ];
+    }
+    
+    // Default menu untuk peran lain (manager, auditor, client, mitra)
     return [
       ...commonItems,
       { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+      { icon: User, label: "Profil", path: "/dashboard/profile" },
       { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
     ];
   };
@@ -197,11 +216,11 @@ const Dashboard = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/dashboard/profile')}>
                 <User className="mr-2" size={16} />
                 <span>Profil</span>
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
                 <Settings className="mr-2" size={16} />
                 <span>Pengaturan</span>
               </DropdownMenuItem>
@@ -219,8 +238,16 @@ const Dashboard = () => {
           <Routes>
             <Route path="/" element={<DashboardOverview currentUser={currentUser} />} />
             <Route path="/clients" element={<ClientsList currentUser={currentUser} />} />
+            <Route path="/documents" element={<DocumentsList currentUser={currentUser} />} />
+            <Route path="/profile" element={<UserProfile currentUser={currentUser} />} />
+            <Route path="/settings" element={<UserSettings currentUser={currentUser} />} />
             
-            {/* Rute khusus Managing Partner */}
+            {/* Admin-specific routes */}
+            {currentUser.role === "admin" && (
+              <Route path="/users" element={<UsersList currentUser={currentUser} />} />
+            )}
+            
+            {/* Managing Partner routes */}
             {currentUser.role === "managingpartner" && (
               <>
                 <Route path="/partner-performance" element={<PartnerPerformance />} />
@@ -230,7 +257,7 @@ const Dashboard = () => {
               </>
             )}
             
-            {/* Rute khusus Partner */}
+            {/* Partner routes */}
             {currentUser.role === "partner" && (
               <>
                 <Route path="/kpi" element={<ManagingPartnerKPI />} />
@@ -239,14 +266,11 @@ const Dashboard = () => {
               </>
             )}
             
-            {/* Rute default untuk semua pengguna */}
+            {/* Default route */}
             <Route path="*" element={<DashboardOverview currentUser={currentUser} />} />
           </Routes>
         </div>
       </main>
-
-      {/* Chat Sidebar */}
-      <ChatSidebar />
     </div>
   );
 };

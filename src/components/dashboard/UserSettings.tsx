@@ -1,6 +1,5 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -8,21 +7,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useToast } from "@/hooks/use-toast";
-import { Bell, Mail, Lock, Smartphone, Globe, Moon, Sun } from "lucide-react";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Separator } from "@/components/ui/separator";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Mail, Smartphone, Bell, Globe } from "lucide-react";
 
 type UserData = {
   name: string;
@@ -32,350 +21,228 @@ type UserData = {
 
 const UserSettings = ({ currentUser }: { currentUser: UserData }) => {
   const { toast } = useToast();
-  const [settings, setSettings] = useState({
-    notifications: {
-      email: true,
-      push: true,
-      updates: false,
-      marketing: false,
-    },
-    appearance: {
-      theme: "system",
-      fontSize: "medium",
-      language: "id"
-    },
-    security: {
-      twoFactor: false,
-      sessions: [
-        { device: "Chrome / Windows 10", location: "Jakarta, Indonesia", active: true, lastActive: "Sekarang" },
-        { device: "Mobile App / Android", location: "Jakarta, Indonesia", active: false, lastActive: "2 hari yang lalu" }
-      ]
-    }
+  // Notification settings state
+  const [notifications, setNotifications] = useState({
+    emailNotifications: true,
+    pushNotifications: true,
+    systemUpdates: false,
+    marketingEmails: false
   });
 
-  const handleNotificationChange = (field: keyof typeof settings.notifications) => {
-    setSettings(prev => ({
-      ...prev,
-      notifications: {
-        ...prev.notifications,
-        [field]: !prev.notifications[field]
-      }
-    }));
-  };
+  // Display settings state
+  const [displaySettings, setDisplaySettings] = useState({
+    darkMode: false,
+    compactView: false,
+    highContrast: false,
+    largeText: false
+  });
 
-  const handleThemeChange = (value: string) => {
-    setSettings(prev => ({
-      ...prev,
-      appearance: {
-        ...prev.appearance,
-        theme: value
-      }
-    }));
-  };
+  // Security settings state
+  const [securitySettings, setSecuritySettings] = useState({
+    loginAlerts: true,
+    twoFactorAuth: false,
+    sessionTimeout: true,
+    dataEncryption: true
+  });
 
-  const handleFontSizeChange = (value: string) => {
-    setSettings(prev => ({
-      ...prev,
-      appearance: {
-        ...prev.appearance,
-        fontSize: value
-      }
-    }));
-  };
-
-  const handleLanguageChange = (value: string) => {
-    setSettings(prev => ({
-      ...prev,
-      appearance: {
-        ...prev.appearance,
-        language: value
-      }
-    }));
-  };
-
-  const handleTwoFactorChange = () => {
-    setSettings(prev => ({
-      ...prev,
-      security: {
-        ...prev.security,
-        twoFactor: !prev.security.twoFactor
-      }
-    }));
-
-    if (!settings.security.twoFactor) {
-      toast({
-        title: "Autentikasi Dua Faktor",
-        description: "Petunjuk aktivasi telah dikirim ke email Anda.",
-      });
-    }
-  };
-
-  const saveSettings = () => {
+  const handleSaveSettings = () => {
     toast({
       title: "Pengaturan Disimpan",
-      description: "Pengaturan Anda telah berhasil diperbarui.",
+      description: "Perubahan pengaturan Anda telah disimpan.",
     });
   };
 
   return (
-    <div className="space-y-6">
-      <Card>
-        <CardHeader>
-          <CardTitle>Pengaturan</CardTitle>
-          <CardDescription>
-            Kelola preferensi dan pengaturan akun Anda
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="notifications" className="w-full">
-            <TabsList className="mb-6 grid w-full grid-cols-1 md:grid-cols-3 lg:max-w-md">
-              <TabsTrigger value="notifications">Notifikasi</TabsTrigger>
-              <TabsTrigger value="appearance">Tampilan</TabsTrigger>
-              <TabsTrigger value="security">Keamanan</TabsTrigger>
-            </TabsList>
-            
-            {/* Notifications Tab */}
-            <TabsContent value="notifications" className="space-y-6">
-              <div className="space-y-4">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-blue-100 rounded-full">
-                      <Mail className="h-5 w-5 text-blue-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Email Notifikasi</h3>
-                      <p className="text-sm text-gray-500">Terima notifikasi melalui email</p>
-                    </div>
+    <Card>
+      <CardHeader>
+        <CardTitle>Pengaturan</CardTitle>
+        <CardDescription>
+          Kelola preferensi dan pengaturan akun Anda
+        </CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Tabs defaultValue="notifications">
+          <TabsList className="mb-6">
+            <TabsTrigger value="notifications">Notifikasi</TabsTrigger>
+            <TabsTrigger value="display">Tampilan</TabsTrigger>
+            <TabsTrigger value="security">Keamanan</TabsTrigger>
+          </TabsList>
+
+          {/* Notification Settings Tab */}
+          <TabsContent value="notifications">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-blue-100 p-2 rounded-full">
+                    <Mail className="h-6 w-6 text-blue-700" />
                   </div>
-                  <Switch 
-                    checked={settings.notifications.email}
-                    onCheckedChange={() => handleNotificationChange("email")}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-green-100 rounded-full">
-                      <Smartphone className="h-5 w-5 text-green-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Notifikasi Push</h3>
-                      <p className="text-sm text-gray-500">Terima notifikasi push pada perangkat</p>
-                    </div>
+                  <div>
+                    <h4 className="font-medium">Email Notifikasi</h4>
+                    <p className="text-sm text-gray-500">Terima notifikasi melalui email</p>
                   </div>
-                  <Switch 
-                    checked={settings.notifications.push}
-                    onCheckedChange={() => handleNotificationChange("push")}
-                  />
                 </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-amber-100 rounded-full">
-                      <Bell className="h-5 w-5 text-amber-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Pembaruan Sistem</h3>
-                      <p className="text-sm text-gray-500">Terima pembaruan tentang fitur baru</p>
-                    </div>
-                  </div>
-                  <Switch 
-                    checked={settings.notifications.updates}
-                    onCheckedChange={() => handleNotificationChange("updates")}
-                  />
-                </div>
-                
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center space-x-3">
-                    <div className="p-2 bg-purple-100 rounded-full">
-                      <Globe className="h-5 w-5 text-purple-600" />
-                    </div>
-                    <div>
-                      <h3 className="font-medium">Email Marketing</h3>
-                      <p className="text-sm text-gray-500">Terima email mengenai layanan dan promosi</p>
-                    </div>
-                  </div>
-                  <Switch 
-                    checked={settings.notifications.marketing}
-                    onCheckedChange={() => handleNotificationChange("marketing")}
-                  />
-                </div>
+                <Switch
+                  checked={notifications.emailNotifications}
+                  onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, emailNotifications: checked }))}
+                />
               </div>
-              
-              <Button onClick={saveSettings}>
-                Simpan Pengaturan
-              </Button>
-            </TabsContent>
-            
-            {/* Appearance Tab */}
-            <TabsContent value="appearance" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Tema Tampilan</CardTitle>
-                  <CardDescription>
-                    Sesuaikan tampilan aplikasi dengan preferensi Anda
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-4">
-                    <div className="space-y-3">
-                      <Label>Tema</Label>
-                      <RadioGroup 
-                        value={settings.appearance.theme}
-                        onValueChange={handleThemeChange}
-                        className="flex flex-col space-y-1"
-                      >
-                        <div className="flex items-center space-x-3">
-                          <RadioGroupItem value="light" id="light" />
-                          <Label htmlFor="light" className="flex items-center">
-                            <Sun className="h-4 w-4 mr-2" />
-                            Terang
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <RadioGroupItem value="dark" id="dark" />
-                          <Label htmlFor="dark" className="flex items-center">
-                            <Moon className="h-4 w-4 mr-2" />
-                            Gelap
-                          </Label>
-                        </div>
-                        <div className="flex items-center space-x-3">
-                          <RadioGroupItem value="system" id="system" />
-                          <Label htmlFor="system">Mengikuti Sistem</Label>
-                        </div>
-                      </RadioGroup>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <div className="space-y-3">
-                      <Label htmlFor="font-size">Ukuran Font</Label>
-                      <Select 
-                        value={settings.appearance.fontSize}
-                        onValueChange={handleFontSizeChange}
-                      >
-                        <SelectTrigger id="font-size">
-                          <SelectValue placeholder="Pilih ukuran font" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="small">Kecil</SelectItem>
-                          <SelectItem value="medium">Sedang</SelectItem>
-                          <SelectItem value="large">Besar</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <Separator />
-                    
-                    <div className="space-y-3">
-                      <Label htmlFor="language">Bahasa</Label>
-                      <Select 
-                        value={settings.appearance.language}
-                        onValueChange={handleLanguageChange}
-                      >
-                        <SelectTrigger id="language">
-                          <SelectValue placeholder="Pilih bahasa" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="id">Indonesia</SelectItem>
-                          <SelectItem value="en">English</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-green-100 p-2 rounded-full">
+                    <Smartphone className="h-6 w-6 text-green-700" />
                   </div>
-                </CardContent>
-              </Card>
-              
-              <Button onClick={saveSettings}>
-                Simpan Pengaturan
-              </Button>
-            </TabsContent>
-            
-            {/* Security Tab */}
-            <TabsContent value="security" className="space-y-6">
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Keamanan Akun</CardTitle>
-                  <CardDescription>
-                    Kelola opsi keamanan untuk melindungi akun Anda
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className="p-2 bg-kap-light rounded-full">
-                        <Lock className="h-5 w-5 text-kap-navy" />
-                      </div>
-                      <div>
-                        <h3 className="font-medium">Autentikasi Dua Faktor</h3>
-                        <p className="text-sm text-gray-500">Tingkatkan keamanan dengan verifikasi tambahan</p>
-                      </div>
-                    </div>
-                    <Switch 
-                      checked={settings.security.twoFactor}
-                      onCheckedChange={handleTwoFactorChange}
-                    />
+                  <div>
+                    <h4 className="font-medium">Notifikasi Push</h4>
+                    <p className="text-sm text-gray-500">Terima notifikasi push pada perangkat</p>
                   </div>
-                  
-                  <Separator className="my-4" />
-                  
-                  <div className="space-y-4">
-                    <h3 className="font-medium">Sesi Aktif</h3>
-                    <div className="space-y-3">
-                      {settings.security.sessions.map((session, index) => (
-                        <div key={index} className="flex items-center justify-between p-3 border rounded-lg">
-                          <div className="space-y-1">
-                            <div className="font-medium">{session.device}</div>
-                            <div className="text-sm text-gray-500">
-                              {session.location} • {session.active ? (
-                                <span className="text-green-600">Aktif sekarang</span>
-                              ) : (
-                                <span>Aktif {session.lastActive}</span>
-                              )}
-                            </div>
-                          </div>
-                          {!session.active && (
-                            <Button variant="outline" size="sm">
-                              Akhiri Sesi
-                            </Button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
+                </div>
+                <Switch
+                  checked={notifications.pushNotifications}
+                  onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, pushNotifications: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-amber-100 p-2 rounded-full">
+                    <Bell className="h-6 w-6 text-amber-700" />
                   </div>
-                </CardContent>
-              </Card>
-              
-              <Card>
-                <CardHeader>
-                  <CardTitle className="text-lg">Ubah Password</CardTitle>
-                  <CardDescription>
-                    Perbarui password akun Anda secara rutin untuk keamanan
-                  </CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <form className="space-y-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="current-password">Password Saat Ini</Label>
-                      <Input type="password" id="current-password" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="new-password">Password Baru</Label>
-                      <Input type="password" id="new-password" />
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="confirm-password">Konfirmasi Password Baru</Label>
-                      <Input type="password" id="confirm-password" />
-                    </div>
-                    <Button>Perbarui Password</Button>
-                  </form>
-                </CardContent>
-              </Card>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-    </div>
+                  <div>
+                    <h4 className="font-medium">Pembaruan Sistem</h4>
+                    <p className="text-sm text-gray-500">Terima pembaruan tentang fitur baru</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={notifications.systemUpdates}
+                  onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, systemUpdates: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div className="flex items-start space-x-4">
+                  <div className="bg-purple-100 p-2 rounded-full">
+                    <Globe className="h-6 w-6 text-purple-700" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium">Email Marketing</h4>
+                    <p className="text-sm text-gray-500">Terima email mengenai layanan dan promosi</p>
+                  </div>
+                </div>
+                <Switch
+                  checked={notifications.marketingEmails}
+                  onCheckedChange={(checked) => setNotifications(prev => ({ ...prev, marketingEmails: checked }))}
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Display Settings Tab */}
+          <TabsContent value="display">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Mode Gelap</h4>
+                  <p className="text-sm text-gray-500">Ubah tampilan aplikasi ke mode gelap</p>
+                </div>
+                <Switch
+                  checked={displaySettings.darkMode}
+                  onCheckedChange={(checked) => setDisplaySettings(prev => ({ ...prev, darkMode: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Tampilan Kompak</h4>
+                  <p className="text-sm text-gray-500">Tampilkan lebih banyak konten dalam satu layar</p>
+                </div>
+                <Switch
+                  checked={displaySettings.compactView}
+                  onCheckedChange={(checked) => setDisplaySettings(prev => ({ ...prev, compactView: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Kontras Tinggi</h4>
+                  <p className="text-sm text-gray-500">Tingkatkan keterbacaan dengan kontras yang lebih tinggi</p>
+                </div>
+                <Switch
+                  checked={displaySettings.highContrast}
+                  onCheckedChange={(checked) => setDisplaySettings(prev => ({ ...prev, highContrast: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Teks Besar</h4>
+                  <p className="text-sm text-gray-500">Tingkatkan ukuran teks untuk keterbacaan yang lebih baik</p>
+                </div>
+                <Switch
+                  checked={displaySettings.largeText}
+                  onCheckedChange={(checked) => setDisplaySettings(prev => ({ ...prev, largeText: checked }))}
+                />
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Security Settings Tab */}
+          <TabsContent value="security">
+            <div className="space-y-6">
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Peringatan Login</h4>
+                  <p className="text-sm text-gray-500">Terima peringatan saat terjadi login baru</p>
+                </div>
+                <Switch
+                  checked={securitySettings.loginAlerts}
+                  onCheckedChange={(checked) => setSecuritySettings(prev => ({ ...prev, loginAlerts: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Otentikasi Dua Faktor</h4>
+                  <p className="text-sm text-gray-500">Tingkatkan keamanan dengan otentikasi tambahan</p>
+                </div>
+                <Switch
+                  checked={securitySettings.twoFactorAuth}
+                  onCheckedChange={(checked) => setSecuritySettings(prev => ({ ...prev, twoFactorAuth: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Batas Waktu Sesi</h4>
+                  <p className="text-sm text-gray-500">Logout otomatis setelah 30 menit tidak aktif</p>
+                </div>
+                <Switch
+                  checked={securitySettings.sessionTimeout}
+                  onCheckedChange={(checked) => setSecuritySettings(prev => ({ ...prev, sessionTimeout: checked }))}
+                />
+              </div>
+
+              <div className="flex items-center justify-between space-x-2 rounded-lg border p-4">
+                <div>
+                  <h4 className="font-medium">Enkripsi Data</h4>
+                  <p className="text-sm text-gray-500">Enkripsi data sensitif saat transmisi</p>
+                </div>
+                <Switch
+                  checked={securitySettings.dataEncryption}
+                  onCheckedChange={(checked) => setSecuritySettings(prev => ({ ...prev, dataEncryption: checked }))}
+                />
+              </div>
+            </div>
+          </TabsContent>
+        </Tabs>
+
+        <div className="mt-8">
+          <Button onClick={handleSaveSettings}>
+            Simpan Pengaturan
+          </Button>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
