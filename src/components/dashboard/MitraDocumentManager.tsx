@@ -2,7 +2,8 @@
 import { useState } from "react";
 import MitraOverview from "./mitra/MitraOverview";
 import DocumentManager from "./mitra/DocumentManager";
-import { LayoutDashboard, FileText, User, Settings } from "lucide-react";
+import ClientsList from "./ClientsList";
+import { LayoutDashboard, FileText, User, Settings, Users } from "lucide-react";
 
 type UserData = {
   name: string;
@@ -13,12 +14,21 @@ type UserData = {
 const MitraDocumentManager = () => {
   const [activeSection, setActiveSection] = useState("overview");
   
+  // Mitra user information
+  const mitraUser = {
+    name: "PT Maju Bersama",
+    email: "mitra@example.com",
+    role: "mitra"
+  };
+  
   const renderContent = () => {
     switch (activeSection) {
       case "overview":
         return <MitraOverview />;
       case "documents":
         return <DocumentManager />;
+      case "clients":
+        return <ClientsList currentUser={mitraUser} />;
       default:
         return <MitraOverview />;
     }
@@ -29,6 +39,11 @@ const MitraDocumentManager = () => {
       id: "overview",
       label: "Overview",
       icon: <LayoutDashboard className="h-5 w-5" />
+    },
+    {
+      id: "clients",
+      label: "Klien",
+      icon: <Users className="h-5 w-5" />
     },
     {
       id: "documents",
@@ -58,7 +73,7 @@ const MitraDocumentManager = () => {
             </div>
             <div>
               <p className="font-medium text-sm">PT Maju Bersama</p>
-              <p className="text-xs text-gray-500">client</p>
+              <p className="text-xs text-gray-500">mitra</p>
             </div>
           </div>
         </div>

@@ -329,7 +329,7 @@ const ClientsList = ({ currentUser }: { currentUser: UserData }) => {
   });
   
   // Check if user has permission to add/edit/delete
-  const hasEditPermission = ["admin", "manager"].includes(currentUser.role);
+  const hasEditPermission = ["admin", "manager", "mitra"].includes(currentUser.role);
   
   return (
     <Card>
@@ -341,7 +341,7 @@ const ClientsList = ({ currentUser }: { currentUser: UserData }) => {
           </div>
           
           {hasEditPermission && (
-            <Button className="mt-4 md:mt-0" onClick={openAddClientDialog}>
+            <Button className="mt-4 md:mt-0 bg-black text-white hover:bg-gray-800" onClick={openAddClientDialog}>
               <Plus size={18} className="mr-2" />
               Tambah Klien
             </Button>
