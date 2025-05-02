@@ -1,14 +1,20 @@
 
-import { useState } from "react";
-import DocumentStats from "./DocumentStats";
-import AuditProgress from "./AuditProgress";
-import AuditCharts from "./AuditCharts";
-
-type UserData = {
-  name: string;
-  email: string;
-  role: string;
-};
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { FileText, ClipboardCheck, Clock, FileArchive } from "lucide-react";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from "recharts";
 
 // Sample data for mitra documents status counting
 const mitraDocuments = [
@@ -54,6 +60,19 @@ const mitraDocuments = [
   }
 ];
 
+// Sample data for activity chart
+const activityData = [
+  { name: "Jan", dokumen: 2 },
+  { name: "Feb", dokumen: 4 },
+  { name: "Mar", dokumen: 3 },
+  { name: "Apr", dokumen: 1 },
+  { name: "Mei", dokumen: 3 },
+  { name: "Jun", dokumen: 2 },
+];
+
+// Colors for pie chart
+const COLORS = ['#10B981', '#F59E0B', '#EF4444'];
+
 const MitraOverview = () => {
   // Calculate statistics
   const totalDocuments = mitraDocuments.length;
@@ -61,21 +80,194 @@ const MitraOverview = () => {
   const inProgressDocuments = mitraDocuments.filter(doc => doc.status === "in_progress").length;
   const reviewDocuments = mitraDocuments.filter(doc => doc.status === "review").length;
   
+  // Data for pie chart
+  const pieData = [
+    { name: "Selesai", value: completedDocuments, percentage: Math.round((completedDocuments / totalDocuments) * 100) },
+    { name: "Dalam Proses", value: inProgressDocuments, percentage: Math.round((inProgressDocuments / totalDocuments) * 100) },
+    { name: "Butuh Revisi", value: reviewDocuments, percentage: Math.round((reviewDocuments / totalDocuments) * 100) },
+  ];
+  
   return (
     <div className="space-y-6">
-      {/* Header - Audit Status Overview */}
-      <DocumentStats 
-        totalDocuments={totalDocuments}
-        completedDocuments={completedDocuments}
-        inProgressDocuments={inProgressDocuments}
-        reviewDocuments={reviewDocuments}
-      />
+      {/* Welcome Banner */}
+      <div className="bg-kap-navy text-white rounded-lg p-6">
+        <h1 className="text-2xl font-bold">Selamat Datang, PT Maju Bersama!</h1>
+        <p className="text-gray-200 mt-1">Selamat datang di portal klien KAP MGI GAR SURABAYA.</p>
+      </div>
 
-      {/* Audit Progress Dashboard */}
-      <AuditProgress />
-
+      {/* Document Stats */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-white">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-500">Total Dokumen</p>
+                <h2 className="text-3xl font-bold">{totalDocuments}</h2>
+              </div>
+              <div className="bg-blue-100 p-3 rounded-full">
+                <FileText className="h-6 w-6 text-blue-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-500">Menunggu Review</p>
+                <h2 className="text-3xl font-bold">{reviewDocuments}</h2>
+              </div>
+              <div className="bg-amber-100 p-3 rounded-full">
+                <Clock className="h-6 w-6 text-amber-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-500">Selesai Diproses</p>
+                <h2 className="text-3xl font-bold">{completedDocuments}</h2>
+              </div>
+              <div className="bg-green-100 p-3 rounded-full">
+                <ClipboardCheck className="h-6 w-6 text-green-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+        
+        <Card className="bg-white">
+          <CardContent className="p-6">
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="text-gray-500">Laporan Siap</p>
+                <h2 className="text-3xl font-bold">8</h2>
+              </div>
+              <div className="bg-purple-100 p-3 rounded-full">
+                <FileArchive className="h-6 w-6 text-purple-600" />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
       {/* Charts Section */}
-      <AuditCharts />
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Status Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Dokumen Berdasarkan Status</CardTitle>
+            <p className="text-sm text-gray-500">Distribusi dokumen Anda berdasarkan status</p>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80 flex flex-col items-center justify-center">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart>
+                  <Pie
+                    data={pieData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    outerRadius={100}
+                    fill="#8884d8"
+                    dataKey="value"
+                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                  >
+                    {pieData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Legend />
+                  <Tooltip formatter={(value) => [value, 'Jumlah Dokumen']} />
+                </PieChart>
+              </ResponsiveContainer>
+              <div className="flex justify-center mt-4 space-x-6">
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+                  <span className="text-xs">Selesai: {pieData[0].percentage}%</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-amber-500 rounded-full mr-1"></div>
+                  <span className="text-xs">Dalam Proses: {pieData[1].percentage}%</span>
+                </div>
+                <div className="flex items-center">
+                  <div className="w-3 h-3 bg-red-500 rounded-full mr-1"></div>
+                  <span className="text-xs">Butuh Revisi: {pieData[2].percentage}%</span>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Activity Chart */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Aktivitas Dokumen</CardTitle>
+            <p className="text-sm text-gray-500">Dokumen yang diproses dalam 6 bulan terakhir</p>
+          </CardHeader>
+          <CardContent>
+            <div className="h-80">
+              <ResponsiveContainer width="100%" height="100%">
+                <LineChart data={activityData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line 
+                    type="monotone" 
+                    dataKey="dokumen" 
+                    stroke="#8884d8" 
+                    activeDot={{ r: 8 }} 
+                    strokeWidth={2}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Progress Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Status Dokumen</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm font-medium">Selesai</span>
+              <span className="text-sm font-medium">{completedDocuments}/{totalDocuments}</span>
+            </div>
+            <Progress value={(completedDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
+              <div className="h-full bg-green-500 rounded-full" />
+            </Progress>
+          </div>
+          
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm font-medium">Dalam Proses</span>
+              <span className="text-sm font-medium">{inProgressDocuments}/{totalDocuments}</span>
+            </div>
+            <Progress value={(inProgressDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
+              <div className="h-full bg-amber-500 rounded-full" />
+            </Progress>
+          </div>
+          
+          <div className="space-y-2">
+            <div className="flex justify-between">
+              <span className="text-sm font-medium">Butuh Revisi</span>
+              <span className="text-sm font-medium">{reviewDocuments}/{totalDocuments}</span>
+            </div>
+            <Progress value={(reviewDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
+              <div className="h-full bg-red-500 rounded-full" />
+            </Progress>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };

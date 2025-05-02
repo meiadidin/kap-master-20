@@ -1,8 +1,8 @@
 
 import { useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import MitraOverview from "./mitra/MitraOverview";
 import DocumentManager from "./mitra/DocumentManager";
+import { LayoutDashboard, FileText, User, Settings } from "lucide-react";
 
 type UserData = {
   name: string;
@@ -11,24 +11,82 @@ type UserData = {
 };
 
 const MitraDocumentManager = () => {
-  const [activeTab, setActiveTab] = useState("overview");
+  const [activeSection, setActiveSection] = useState("overview");
   
+  const renderContent = () => {
+    switch (activeSection) {
+      case "overview":
+        return <MitraOverview />;
+      case "documents":
+        return <DocumentManager />;
+      default:
+        return <MitraOverview />;
+    }
+  };
+
+  const navItems = [
+    {
+      id: "overview",
+      label: "Overview",
+      icon: <LayoutDashboard className="h-5 w-5" />
+    },
+    {
+      id: "documents",
+      label: "Dokumen",
+      icon: <FileText className="h-5 w-5" />
+    },
+    {
+      id: "profile",
+      label: "Profil",
+      icon: <User className="h-5 w-5" />
+    },
+    {
+      id: "settings",
+      label: "Pengaturan",
+      icon: <Settings className="h-5 w-5" />
+    }
+  ];
+
   return (
-    <div className="space-y-6">
-      <Tabs defaultValue="overview" value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="mb-6">
-          <TabsTrigger value="overview">Overview</TabsTrigger>
-          <TabsTrigger value="documents">Dokumen</TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="overview">
-          <MitraOverview />
-        </TabsContent>
-        
-        <TabsContent value="documents">
-          <DocumentManager />
-        </TabsContent>
-      </Tabs>
+    <div className="flex h-full">
+      {/* Sidebar Navigation */}
+      <div className="w-64 bg-white border-r min-h-[calc(100vh-4rem)]">
+        <div className="p-4 border-b">
+          <div className="flex items-center space-x-3">
+            <div className="w-10 h-10 rounded-full bg-kap-navy text-white flex items-center justify-center">
+              <span>P</span>
+            </div>
+            <div>
+              <p className="font-medium text-sm">PT Maju Bersama</p>
+              <p className="text-xs text-gray-500">client</p>
+            </div>
+          </div>
+        </div>
+        <nav className="p-2">
+          <ul className="space-y-1">
+            {navItems.map((item) => (
+              <li key={item.id}>
+                <button
+                  className={`w-full flex items-center space-x-3 px-3 py-2 rounded-md text-left ${
+                    activeSection === item.id 
+                      ? "bg-blue-50 text-blue-700" 
+                      : "hover:bg-gray-100"
+                  }`}
+                  onClick={() => setActiveSection(item.id)}
+                >
+                  <span>{item.icon}</span>
+                  <span>{item.label}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </nav>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-6 overflow-auto bg-gray-50">
+        {renderContent()}
+      </div>
     </div>
   );
 };
