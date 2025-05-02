@@ -48,6 +48,28 @@ const Login = () => {
               </button>
             </div>
           </div>
+          
+          {/* Added Forgot Password Link and Contact Information */}
+          <div className="space-y-4 pt-4">
+            <div className="text-center">
+              <Link to="/lupa-password" className="text-kap-blue hover:text-kap-navy transition-colors">
+                Lupa password?
+              </Link>
+            </div>
+            <div className="text-center text-sm text-gray-500 border-t pt-4">
+              <p>Belum memiliki akun?</p>
+              <p className="mt-1">
+                Silakan hubungi kami di{" "}
+                <a href="tel:+62123456789" className="text-kap-blue hover:text-kap-navy font-medium">
+                  (021) 2345-6789
+                </a>{" "}
+                atau{" "}
+                <a href="mailto:info@kapgar.com" className="text-kap-blue hover:text-kap-navy font-medium">
+                  info@kapgar.com
+                </a>
+              </p>
+            </div>
+          </div>
         </div>
       </div>
       
