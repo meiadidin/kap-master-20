@@ -36,6 +36,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
 import { Search, PlusCircle, Edit, Trash2, UserPlus, Mail } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -413,7 +414,6 @@ const UserManagement = () => {
                               </Badge>
                               <Switch
                                 className="ml-2"
-                                size="sm"
                                 checked={user.status === "active"}
                                 onCheckedChange={() => toggleUserStatus(user.id, user.status)}
                               />
@@ -498,7 +498,6 @@ const UserManagement = () => {
                               </Badge>
                               <Switch
                                 className="ml-2"
-                                size="sm"
                                 checked={user.status === "active"}
                                 onCheckedChange={() => toggleUserStatus(user.id, user.status)}
                               />
@@ -576,7 +575,6 @@ const UserManagement = () => {
                               </Badge>
                               <Switch
                                 className="ml-2"
-                                size="sm"
                                 checked={user.status === "active"}
                                 onCheckedChange={() => toggleUserStatus(user.id, user.status)}
                               />
@@ -654,7 +652,6 @@ const UserManagement = () => {
                               </Badge>
                               <Switch
                                 className="ml-2"
-                                size="sm"
                                 checked={user.status === "active"}
                                 onCheckedChange={() => toggleUserStatus(user.id, user.status)}
                               />
