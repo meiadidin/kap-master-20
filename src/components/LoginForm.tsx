@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -187,10 +186,11 @@ const LoginForm = () => {
 
       <Button
         type="submit"
-        className="w-full py-2.5 bg-navy-800 text-white rounded-md hover:bg-navy-900 font-medium"
+        className="w-full flex items-center justify-center py-2.5 bg-gradient-to-r from-kap-navy to-kap-blue text-white rounded-md hover:from-kap-navy hover:to-kap-navy font-medium transition-all duration-300 gap-2"
         disabled={loading}
       >
-        {loading ? "Memproses..." : "Login"}
+        <LogIn size={18} />
+        {loading ? "Memproses..." : "Masuk"}
       </Button>
 
       <div className="relative">

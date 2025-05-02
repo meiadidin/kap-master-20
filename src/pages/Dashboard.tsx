@@ -6,7 +6,6 @@ import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
 import ClientsList from "@/components/dashboard/ClientsList";
 import DocumentsList from "@/components/dashboard/DocumentsList";
-import ChatSidebar from "@/components/dashboard/ChatSidebar";
 import MitraDashboard from "@/components/dashboard/MitraDashboard";
 
 const Dashboard = () => {
@@ -102,9 +101,6 @@ const Dashboard = () => {
           </Routes>
         </div>
       </main>
-      
-      {/* Chat sidebar */}
-      <ChatSidebar />
     </div>
   );
 };
