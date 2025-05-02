@@ -45,7 +45,7 @@ const DashboardSidebar = ({
         label: "Overview",
         value: "overview",
         icon: <LayoutDashboard size={20} />,
-        roles: ["admin", "manager", "auditor", "client"]
+        roles: ["admin", "manager", "auditor", "client", "mitra"]
       }
     ];
     
@@ -55,13 +55,13 @@ const DashboardSidebar = ({
           label: "Klien",
           value: "clients",
           icon: <Users size={20} />,
-          roles: ["admin", "manager", "auditor"]
+          roles: ["admin", "manager", "auditor", "mitra"]
         },
         {
           label: "Dokumen",
           value: "documents",
           icon: <FileText size={20} />,
-          roles: ["admin", "manager", "auditor", "client"]
+          roles: ["admin", "manager", "auditor", "client", "mitra"]
         },
         {
           label: "Pengguna",
@@ -70,19 +70,19 @@ const DashboardSidebar = ({
           roles: ["admin"]
         }
       );
-    } else if (currentUser.role === "auditor") {
+    } else if (currentUser.role === "auditor" || currentUser.role === "mitra") {
       items.push(
         {
           label: "Klien",
           value: "clients",
           icon: <Users size={20} />,
-          roles: ["admin", "manager", "auditor"]
+          roles: ["admin", "manager", "auditor", "mitra"]
         },
         {
           label: "Dokumen",
           value: "documents",
           icon: <FileText size={20} />,
-          roles: ["admin", "manager", "auditor", "client"]
+          roles: ["admin", "manager", "auditor", "client", "mitra"]
         }
       );
     } else if (currentUser.role === "client") {
@@ -90,14 +90,7 @@ const DashboardSidebar = ({
         label: "Dokumen",
         value: "documents",
         icon: <FileText size={20} />,
-        roles: ["admin", "manager", "auditor", "client"]
-      });
-    } else if (currentUser.role === "mitra") {
-      items.push({
-        label: "Dokumen",
-        value: "mitra",
-        icon: <Folder size={20} />,
-        roles: ["mitra"]
+        roles: ["admin", "manager", "auditor", "client", "mitra"]
       });
     }
     

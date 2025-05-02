@@ -53,7 +53,7 @@ const DashboardOverview = ({ currentUser }: { currentUser: UserData }) => {
         { title: "Proyek Aktif", value: "12", icon: <Briefcase className="text-amber-500" size={24} />, color: "bg-amber-100" },
         { title: "Laporan Bulan Ini", value: "8", icon: <Calendar className="text-purple-500" size={24} />, color: "bg-purple-100" },
       ];
-    } else if (currentUser.role === "auditor") {
+    } else if (currentUser.role === "auditor" || currentUser.role === "mitra") {
       return [
         { title: "Klien Ditugaskan", value: "8", icon: <Users className="text-blue-500" size={24} />, color: "bg-blue-100" },
         { title: "Dokumen Diproses", value: "27", icon: <FileText className="text-emerald-500" size={24} />, color: "bg-emerald-100" },
@@ -106,7 +106,7 @@ const DashboardOverview = ({ currentUser }: { currentUser: UserData }) => {
         ))}
       </div>
       
-      {/* Charts section - only for admin, manager, auditor */}
+      {/* Charts section - for admin, manager, auditor, and mitra */}
       {currentUser.role !== "client" && (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Clients Trend */}

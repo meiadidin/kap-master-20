@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -25,7 +26,8 @@ const dummyUsers = [
   { email: "client3@example.com", password: "client123", role: "client", name: "PT Sejahtera Abadi" },
   { email: "client4@example.com", password: "client123", role: "client", name: "PT Bintang Timur" },
   { email: "client5@example.com", password: "client123", role: "client", name: "PT Global Indonesia" },
-  { email: "mitra1@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Utama" }
+  { email: "mitra1@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Utama" },
+  { email: "mitra2@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Partner" }
 ];
 
 const LoginForm = () => {
