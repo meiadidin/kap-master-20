@@ -1,177 +1,104 @@
 
 import { useState } from "react";
 
-type Message = {
+// Tipe untuk pesan
+interface Message {
   id: number;
   senderId: number;
+  receiverId: number;
   content: string;
-  timestamp: Date;
-};
+  timestamp: string;
+}
 
-type Member = {
+// Tipe untuk anggota chat
+interface Member {
   id: number;
   name: string;
   avatar: string;
-  role: string;
   status: "online" | "offline";
-  lastSeen?: Date;
-};
+  lastSeen?: string;
+}
 
-// Dummy chat members data
+// Dummy data anggota chat
 const dummyMembers: Member[] = [
-  {
-    id: 1,
-    name: "Admin Utama",
-    avatar: "AU",
-    role: "admin",
-    status: "online",
-  },
-  {
-    id: 2,
-    name: "Admin Sekunder",
-    avatar: "AS",
-    role: "admin",
-    status: "offline",
-    lastSeen: new Date(Date.now() - 3600000), // 1 hour ago
-  },
-  {
-    id: 3,
-    name: "Manajer Tim",
-    avatar: "MT",
-    role: "manager",
-    status: "online",
-  },
-  {
-    id: 4,
-    name: "Auditor Senior",
-    avatar: "AS",
-    role: "auditor",
-    status: "offline",
-    lastSeen: new Date(Date.now() - 7200000), // 2 hours ago
-  },
-  {
-    id: 5,
-    name: "Auditor Junior",
-    avatar: "AJ",
-    role: "auditor",
-    status: "online",
-  },
-  {
-    id: 6,
-    name: "PT Maju Bersama",
-    avatar: "MB",
-    role: "client",
-    status: "offline",
-    lastSeen: new Date(Date.now() - 86400000), // 1 day ago
-  },
-  {
-    id: 7,
-    name: "CV Teknologi Nusantara",
-    avatar: "TN",
-    role: "client",
-    status: "online",
-  },
+  { id: 1, name: "Admin Utama", avatar: "AU", status: "online" },
+  { id: 2, name: "Manager", avatar: "MN", status: "online" },
+  { id: 3, name: "Auditor Senior", avatar: "AS", status: "offline", lastSeen: "2024-04-01T15:30:00" },
+  { id: 4, name: "PT Maju Bersama", avatar: "MB", status: "offline", lastSeen: "2024-04-02T10:15:00" },
+  { id: 5, name: "Mitra Utama", avatar: "MU", status: "online" }
 ];
 
-// Dummy messages for each conversation
+// Dummy data pesan chat
 const dummyMessages: Record<number, Message[]> = {
   1: [
-    {
-      id: 1,
-      senderId: 1,
-      content: "Halo, bagaimana perkembangan audit PT Sejahtera?",
-      timestamp: new Date(Date.now() - 3600000),
-    },
-    {
-      id: 2,
-      senderId: 0, // Current user
-      content: "Berjalan lancar, dokumen sudah 80% diperiksa",
-      timestamp: new Date(Date.now() - 3540000),
-    },
-    {
-      id: 3,
-      senderId: 1,
-      content: "Bagus, perkiraan kapan akan selesai?",
-      timestamp: new Date(Date.now() - 3480000),
-    },
+    { id: 1, senderId: 0, receiverId: 1, content: "Halo Admin, bagaimana perkembangan laporan audit?", timestamp: "2024-04-02T09:30:00" },
+    { id: 2, senderId: 1, receiverId: 0, content: "Halo, laporan audit sedang dalam proses finalisasi. Akan selesai hari ini.", timestamp: "2024-04-02T09:35:00" },
+    { id: 3, senderId: 0, receiverId: 1, content: "Bagus, terima kasih infonya.", timestamp: "2024-04-02T09:36:00" }
+  ],
+  2: [
+    { id: 1, senderId: 0, receiverId: 2, content: "Selamat pagi Manager, ada update untuk proyek baru?", timestamp: "2024-04-02T08:45:00" },
+    { id: 2, senderId: 2, receiverId: 0, content: "Pagi, kita akan meeting dengan klien baru jam 14:00 hari ini.", timestamp: "2024-04-02T08:50:00" }
   ],
   3: [
-    {
-      id: 1,
-      senderId: 3,
-      content: "Saya sudah mengirim dokumen jadwal untuk bulan depan",
-      timestamp: new Date(Date.now() - 86400000),
-    },
-    {
-      id: 2,
-      senderId: 0, // Current user
-      content: "Terima kasih, akan saya cek segera",
-      timestamp: new Date(Date.now() - 86000000),
-    },
+    { id: 1, senderId: 0, receiverId: 3, content: "Tolong review dokumen yang sudah saya kirim kemarin.", timestamp: "2024-04-01T14:20:00" }
   ],
+  4: [],
   5: [
-    {
-      id: 1,
-      senderId: 5,
-      content: "Ada file yang perlu direvisi untuk PT Bintang",
-      timestamp: new Date(Date.now() - 7200000),
-    },
-  ],
-  7: [
-    {
-      id: 1,
-      senderId: 7,
-      content: "Selamat pagi, kami sudah mengunggah dokumen keuangan",
-      timestamp: new Date(Date.now() - 3600000),
-    },
-    {
-      id: 2,
-      senderId: 0, // Current user
-      content: "Terima kasih, akan kami proses segera",
-      timestamp: new Date(Date.now() - 3540000),
-    },
-  ],
+    { id: 1, senderId: 5, receiverId: 0, content: "Dokumen yang Anda minta sudah saya upload.", timestamp: "2024-04-02T10:05:00" }
+  ]
 };
 
-export function useChat(currentUserId = 0) {
+export const useChat = (currentUserId: number) => {
   const [members] = useState<Member[]>(dummyMembers);
-  const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
   const [messages, setMessages] = useState<Record<number, Message[]>>(dummyMessages);
-  const [newMessage, setNewMessage] = useState("");
+  const [selectedMemberId, setSelectedMemberId] = useState<number | null>(null);
   const [isChatOpen, setIsChatOpen] = useState(false);
+  const [newMessage, setNewMessage] = useState("");
 
-  const selectedMember = members.find((member) => member.id === selectedMemberId);
+  // Mendapatkan member yang dipilih
+  const selectedMember = members.find(member => member.id === selectedMemberId) || null;
+  
+  // Mendapatkan pesan yang sedang aktif
   const currentMessages = selectedMemberId ? messages[selectedMemberId] || [] : [];
 
+  // Memilih member untuk chat
   const handleSelectMember = (memberId: number) => {
     setSelectedMemberId(memberId);
     setIsChatOpen(true);
   };
 
+  // Mengirim pesan
   const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedMemberId) return;
 
     const newMsg: Message = {
-      id: (currentMessages.length > 0 ? Math.max(...currentMessages.map(m => m.id)) : 0) + 1,
+      id: currentMessages.length > 0 ? Math.max(...currentMessages.map(m => m.id)) + 1 : 1,
       senderId: currentUserId,
-      content: newMessage,
-      timestamp: new Date(),
+      receiverId: selectedMemberId,
+      content: newMessage.trim(),
+      timestamp: new Date().toISOString()
     };
 
-    setMessages((prev) => ({
+    setMessages(prev => ({
       ...prev,
-      [selectedMemberId]: [...(prev[selectedMemberId] || []), newMsg],
+      [selectedMemberId]: [...(prev[selectedMemberId] || []), newMsg]
     }));
 
     setNewMessage("");
   };
 
+  // Buka/tutup panel chat
   const toggleChat = () => {
     setIsChatOpen(!isChatOpen);
+    if (!isChatOpen) {
+      setSelectedMemberId(null);
+    }
   };
 
+  // Tutup chat
   const closeChat = () => {
     setIsChatOpen(false);
+    setSelectedMemberId(null);
   };
 
   return {
@@ -179,13 +106,13 @@ export function useChat(currentUserId = 0) {
     selectedMember,
     selectedMemberId,
     currentMessages,
+    messages,
     newMessage,
     isChatOpen,
-    messages, // Ensure messages is included in the return object
     handleSelectMember,
     setNewMessage,
     handleSendMessage,
     toggleChat,
-    closeChat,
+    closeChat
   };
-}
+};
