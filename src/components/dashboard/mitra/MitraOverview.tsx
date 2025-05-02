@@ -1,7 +1,10 @@
 
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Progress } from "@/components/ui/progress";
-import { FileText, ClipboardCheck, Clock, FileArchive } from "lucide-react";
+import { FileText, ClipboardCheck, Clock, FileArchive, Users, Briefcase, Calendar } from "lucide-react";
+import OverviewCard from "../OverviewCard";
+import { overviewStats } from "@/data/overviewStats";
 import {
   LineChart,
   Line,
@@ -87,6 +90,34 @@ const MitraOverview = () => {
     { name: "Butuh Revisi", value: reviewDocuments, percentage: Math.round((reviewDocuments / totalDocuments) * 100) },
   ];
   
+  // Loading state for skeleton
+  const [isLoading, setIsLoading] = useState(true);
+  
+  // Simulate loading delay
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsLoading(false);
+    }, 1500);
+    
+    return () => clearTimeout(timer);
+  }, []);
+  
+  // Map icon names to components
+  const getIconComponent = (iconName: string) => {
+    switch (iconName) {
+      case "users":
+        return <Users className="text-blue-600" />;
+      case "file-text":
+        return <FileText className="text-green-600" />;
+      case "briefcase":
+        return <Briefcase className="text-amber-600" />;
+      case "calendar":
+        return <Calendar className="text-purple-600" />;
+      default:
+        return <FileText className="text-blue-600" />;
+    }
+  };
+  
   return (
     <div className="space-y-6">
       {/* Welcome Banner */}
@@ -95,63 +126,19 @@ const MitraOverview = () => {
         <p className="text-gray-200 mt-1">Selamat datang di portal klien KAP MGI GAR SURABAYA.</p>
       </div>
 
-      {/* Document Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="bg-white">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-500">Total Dokumen</p>
-                <h2 className="text-3xl font-bold">{totalDocuments}</h2>
-              </div>
-              <div className="bg-blue-100 p-3 rounded-full">
-                <FileText className="h-6 w-6 text-blue-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-white">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-500">Menunggu Review</p>
-                <h2 className="text-3xl font-bold">{reviewDocuments}</h2>
-              </div>
-              <div className="bg-amber-100 p-3 rounded-full">
-                <Clock className="h-6 w-6 text-amber-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-white">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-500">Selesai Diproses</p>
-                <h2 className="text-3xl font-bold">{completedDocuments}</h2>
-              </div>
-              <div className="bg-green-100 p-3 rounded-full">
-                <ClipboardCheck className="h-6 w-6 text-green-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card className="bg-white">
-          <CardContent className="p-6">
-            <div className="flex justify-between items-center">
-              <div>
-                <p className="text-gray-500">Laporan Siap</p>
-                <h2 className="text-3xl font-bold">8</h2>
-              </div>
-              <div className="bg-purple-100 p-3 rounded-full">
-                <FileArchive className="h-6 w-6 text-purple-600" />
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+      {/* Overview Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        {overviewStats.map((stat) => (
+          <OverviewCard
+            key={stat.id}
+            title={stat.title}
+            value={stat.value}
+            icon={getIconComponent(stat.icon)}
+            href={stat.href}
+            color={stat.color}
+            isLoading={isLoading}
+          />
+        ))}
       </div>
       
       {/* Charts Section */}
@@ -164,26 +151,43 @@ const MitraOverview = () => {
           </CardHeader>
           <CardContent>
             <div className="h-80 flex flex-col items-center justify-center">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart>
-                  <Pie
-                    data={pieData}
-                    cx="50%"
-                    cy="50%"
-                    labelLine={false}
-                    outerRadius={100}
-                    fill="#8884d8"
-                    dataKey="value"
-                    label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                  >
-                    {pieData.map((entry, index) => (
-                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
-                    ))}
-                  </Pie>
-                  <Legend />
-                  <Tooltip formatter={(value) => [value, 'Jumlah Dokumen']} />
-                </PieChart>
-              </ResponsiveContainer>
+              {isLoading ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="space-y-4 w-full">
+                    <div className="flex justify-center">
+                      <div className="w-40 h-40 rounded-full border-4 border-gray-200 border-t-blue-500 animate-spin"></div>
+                    </div>
+                    <div className="space-y-2 w-full">
+                      <div className="flex justify-between">
+                        <div className="w-1/4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                        <div className="w-1/4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                      </div>
+                      <div className="w-full h-4 bg-gray-200 rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <PieChart>
+                    <Pie
+                      data={pieData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={false}
+                      outerRadius={100}
+                      fill="#8884d8"
+                      dataKey="value"
+                      label={({ name, percent }) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {pieData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                      ))}
+                    </Pie>
+                    <Legend />
+                    <Tooltip formatter={(value) => [value, 'Jumlah Dokumen']} />
+                  </PieChart>
+                </ResponsiveContainer>
+              )}
               <div className="flex justify-center mt-4 space-x-6">
                 <div className="flex items-center">
                   <div className="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
@@ -210,22 +214,32 @@ const MitraOverview = () => {
           </CardHeader>
           <CardContent>
             <div className="h-80">
-              <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={activityData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="name" />
-                  <YAxis />
-                  <Tooltip />
-                  <Legend />
-                  <Line 
-                    type="monotone" 
-                    dataKey="dokumen" 
-                    stroke="#8884d8" 
-                    activeDot={{ r: 8 }} 
-                    strokeWidth={2}
-                  />
-                </LineChart>
-              </ResponsiveContainer>
+              {isLoading ? (
+                <div className="w-full h-full flex items-center justify-center">
+                  <div className="space-y-4 w-full">
+                    <div className="w-full h-4 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="w-full h-60 bg-gray-200 rounded animate-pulse"></div>
+                    <div className="w-3/4 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  </div>
+                </div>
+              ) : (
+                <ResponsiveContainer width="100%" height="100%">
+                  <LineChart data={activityData}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line 
+                      type="monotone" 
+                      dataKey="dokumen" 
+                      stroke="#8884d8" 
+                      activeDot={{ r: 8 }} 
+                      strokeWidth={2}
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -237,35 +251,63 @@ const MitraOverview = () => {
           <CardTitle>Status Dokumen</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Selesai</span>
-              <span className="text-sm font-medium">{completedDocuments}/{totalDocuments}</span>
+          {isLoading ? (
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <div className="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <div className="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded animate-pulse"></div>
+              </div>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <div className="w-24 h-4 bg-gray-200 rounded animate-pulse"></div>
+                  <div className="w-16 h-4 bg-gray-200 rounded animate-pulse"></div>
+                </div>
+                <div className="w-full h-2 bg-gray-200 rounded animate-pulse"></div>
+              </div>
             </div>
-            <Progress value={(completedDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
-              <div className="h-full bg-green-500 rounded-full" />
-            </Progress>
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Dalam Proses</span>
-              <span className="text-sm font-medium">{inProgressDocuments}/{totalDocuments}</span>
-            </div>
-            <Progress value={(inProgressDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
-              <div className="h-full bg-amber-500 rounded-full" />
-            </Progress>
-          </div>
-          
-          <div className="space-y-2">
-            <div className="flex justify-between">
-              <span className="text-sm font-medium">Butuh Revisi</span>
-              <span className="text-sm font-medium">{reviewDocuments}/{totalDocuments}</span>
-            </div>
-            <Progress value={(reviewDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
-              <div className="h-full bg-red-500 rounded-full" />
-            </Progress>
-          </div>
+          ) : (
+            <>
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium">Selesai</span>
+                  <span className="text-sm font-medium">{completedDocuments}/{totalDocuments}</span>
+                </div>
+                <Progress value={(completedDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
+                  <div className="h-full bg-green-500 rounded-full" />
+                </Progress>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium">Dalam Proses</span>
+                  <span className="text-sm font-medium">{inProgressDocuments}/{totalDocuments}</span>
+                </div>
+                <Progress value={(inProgressDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
+                  <div className="h-full bg-amber-500 rounded-full" />
+                </Progress>
+              </div>
+              
+              <div className="space-y-2">
+                <div className="flex justify-between">
+                  <span className="text-sm font-medium">Butuh Revisi</span>
+                  <span className="text-sm font-medium">{reviewDocuments}/{totalDocuments}</span>
+                </div>
+                <Progress value={(reviewDocuments / totalDocuments) * 100} className="h-2 bg-gray-100">
+                  <div className="h-full bg-red-500 rounded-full" />
+                </Progress>
+              </div>
+            </>
+          )}
         </CardContent>
       </Card>
     </div>
