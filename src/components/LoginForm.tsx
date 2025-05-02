@@ -27,7 +27,11 @@ const dummyUsers = [
   { email: "client4@example.com", password: "client123", role: "client", name: "PT Bintang Timur" },
   { email: "client5@example.com", password: "client123", role: "client", name: "PT Global Indonesia" },
   { email: "mitra1@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Utama" },
-  { email: "mitra2@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Partner" }
+  { email: "mitra2@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Partner" },
+  // Menambahkan user Managing Partner
+  { email: "managingpartner@kapgar.com", password: "managingpartner123", role: "managingpartner", name: "Dr. Gideon Setyo Budiwitjaksono" },
+  // Menambahkan user Partner
+  { email: "partner1@kapgar.com", password: "partner123", role: "partner", name: "Hendri Yanto" }
 ];
 
 const LoginForm = () => {
@@ -116,6 +120,8 @@ const LoginForm = () => {
             <SelectValue placeholder="Pilih tipe akun" />
           </SelectTrigger>
           <SelectContent className="z-50">
+            <SelectItem value="managingpartner">Managing Partner</SelectItem>
+            <SelectItem value="partner">Partner</SelectItem>
             <SelectItem value="admin">Administrator</SelectItem>
             <SelectItem value="manager">Manajer</SelectItem>
             <SelectItem value="auditor">Auditor</SelectItem>
