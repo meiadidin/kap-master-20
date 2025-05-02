@@ -10,7 +10,7 @@ import UserProfile from "@/components/dashboard/UserProfile";
 import UserSettings from "@/components/dashboard/UserSettings";
 import UsersManagement from "@/components/dashboard/UsersManagement";
 import MitraDocumentManager from "@/components/dashboard/MitraDocumentManager";
-import ChatSidebar from "@/components/dashboard/ChatSidebar";
+import ClientDocumentManager from "@/components/dashboard/ClientDocumentManager";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -74,6 +74,9 @@ const Dashboard = () => {
       case "clients":
         return <ClientsList currentUser={currentUser} />;
       case "documents":
+        if (currentUser.role === "client") {
+          return <ClientDocumentManager currentUser={currentUser} />;
+        }
         return <DocumentsList currentUser={currentUser} />;
       case "users":
         return <UsersManagement />;
@@ -108,8 +111,6 @@ const Dashboard = () => {
           {renderContent()}
         </div>
       </div>
-      
-      <ChatSidebar />
     </div>
   );
 };

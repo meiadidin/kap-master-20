@@ -1,878 +1,527 @@
 
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/hooks/use-toast";
-import { Badge } from "@/components/ui/badge";
-import {
-  FileText,
-  FolderPlus,
-  FileUp,
-  FilePen,
-  FileSearch,
-  Send,
-  FolderOpen,
-  Folder,
-  Pencil,
-  ChevronRight,
-  ChevronDown,
-  Plus,
-  Trash2,
-  Clock,
-} from "lucide-react";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { FileText, Folder, Search, UploadCloud, FolderPlus, Eye, Download, Send } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { id } from "date-fns/locale";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  ResponsiveContainer,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  PieChart as RechartsPieChart,
+  Pie,
+  Cell,
+  Legend,
+  LineChart,
+  Line,
+  CartesianGrid,
+} from "recharts";
 
-interface Document {
-  id: string;
-  name: string;
-  type: string;
-  status: string;
-  lastModified: string;
-  size: string;
-  progress: number;
-}
-
-interface Folder {
-  id: string;
-  name: string;
-  documents: Document[];
-  subfolders: Folder[];
-  isOpen: boolean;
-}
-
-const initialFolders: Folder[] = [
+// Sample data for mitra documents
+const mitraDocuments = [
   {
-    id: "folder-1",
-    name: "Dokumen Pajak",
-    documents: [
-      {
-        id: "doc-1",
-        name: "SPT Tahunan 2023.pdf",
-        type: "PDF",
-        status: "completed",
-        lastModified: "2023-12-15",
-        size: "2.4 MB",
-        progress: 100
-      },
-      {
-        id: "doc-2",
-        name: "Laporan PPh 21.xlsx",
-        type: "Excel",
-        status: "review",
-        lastModified: "2024-01-10",
-        size: "1.2 MB",
-        progress: 80
-      }
-    ],
-    subfolders: [],
-    isOpen: false
+    id: 1,
+    name: "Laporan Keuangan PT Maju Bersama",
+    type: "financial",
+    client: "PT Maju Bersama",
+    lastModified: "2024-04-15T08:30:00",
+    status: "completed"
   },
   {
-    id: "folder-2",
-    name: "Dokumen Keuangan",
-    documents: [
-      {
-        id: "doc-3",
-        name: "Neraca 2023.xlsx",
-        type: "Excel",
-        status: "in-progress",
-        lastModified: "2024-02-05",
-        size: "3.5 MB",
-        progress: 45
-      }
-    ],
-    subfolders: [
-      {
-        id: "subfolder-1",
-        name: "Laporan Bulanan",
-        documents: [
-          {
-            id: "doc-4",
-            name: "Laporan Januari.pdf",
-            type: "PDF",
-            status: "completed",
-            lastModified: "2024-01-15",
-            size: "1.8 MB",
-            progress: 100
-          }
-        ],
-        subfolders: [],
-        isOpen: false
-      }
-    ],
-    isOpen: false
+    id: 2,
+    name: "Audit Internal CV Teknologi",
+    type: "audit",
+    client: "CV Teknologi Nusantara",
+    lastModified: "2024-04-10T14:20:00",
+    status: "in_progress"
+  },
+  {
+    id: 3,
+    name: "Laporan Pajak PT Sejahtera",
+    type: "tax",
+    client: "PT Sejahtera Abadi",
+    lastModified: "2024-04-05T11:45:00",
+    status: "review"
+  },
+  {
+    id: 4,
+    name: "Registrasi Klien Baru",
+    type: "registration",
+    client: "PT Bintang Timur",
+    lastModified: "2024-03-30T09:15:00",
+    status: "completed"
+  },
+  {
+    id: 5,
+    name: "Proyeksi Keuangan 2024",
+    type: "financial",
+    client: "PT Global Indonesia",
+    lastModified: "2024-03-22T13:50:00",
+    status: "in_progress"
   }
 ];
 
-const statusColors: Record<string, string> = {
-  "completed": "bg-green-100 text-green-800",
-  "in-progress": "bg-blue-100 text-blue-800",
-  "review": "bg-purple-100 text-purple-800",
-  "draft": "bg-gray-100 text-gray-800",
-  "rejected": "bg-red-100 text-red-800",
-  "pending": "bg-amber-100 text-amber-800",
-};
+// Sample data for mitra folders
+const mitraFolders = [
+  {
+    id: 1,
+    name: "Laporan Keuangan",
+    documentsCount: 12,
+    lastModified: "2024-04-16T10:30:00"
+  },
+  {
+    id: 2,
+    name: "Dokumen Pajak",
+    documentsCount: 8,
+    lastModified: "2024-04-12T14:15:00"
+  },
+  {
+    id: 3,
+    name: "Audit",
+    documentsCount: 15,
+    lastModified: "2024-04-08T09:45:00"
+  }
+];
+
+// Audit progress data
+const auditProgressData = [
+  { 
+    id: 1,
+    client: "PT Maju Bersama",
+    project: "Audit Laporan Keuangan 2023",
+    status: "in_progress",
+    progress: 65,
+    startDate: "2024-02-15T00:00:00",
+    endDate: "2024-05-30T00:00:00",
+    team: ["Auditor A", "Auditor B", "Auditor C"]
+  },
+  { 
+    id: 2,
+    client: "CV Teknologi Nusantara",
+    project: "Audit Internal",
+    status: "in_progress",
+    progress: 40,
+    startDate: "2024-03-10T00:00:00",
+    endDate: "2024-06-10T00:00:00",
+    team: ["Auditor B", "Auditor D"]
+  },
+  { 
+    id: 3,
+    client: "PT Sejahtera Abadi",
+    project: "Audit Pajak",
+    status: "review",
+    progress: 85,
+    startDate: "2024-01-20T00:00:00",
+    endDate: "2024-04-30T00:00:00",
+    team: ["Auditor A", "Auditor E"]
+  },
+  { 
+    id: 4,
+    client: "PT Bintang Timur",
+    project: "Audit Kepatuhan",
+    status: "completed",
+    progress: 100,
+    startDate: "2024-01-05T00:00:00",
+    endDate: "2024-03-15T00:00:00",
+    team: ["Auditor C", "Auditor F"]
+  }
+];
+
+// Chart data for audit types
+const auditTypeData = [
+  { name: "Laporan Keuangan", value: 10 },
+  { name: "Pajak", value: 7 },
+  { name: "Internal", value: 5 },
+  { name: "Kepatuhan", value: 3 }
+];
+
+// Chart data for monthly audits
+const monthlyAuditsData = [
+  { name: "Jan", completed: 3, ongoing: 1 },
+  { name: "Feb", completed: 2, ongoing: 2 },
+  { name: "Mar", completed: 4, ongoing: 3 },
+  { name: "Apr", completed: 1, ongoing: 4 },
+  { name: "Mei", completed: 0, ongoing: 5 },
+  { name: "Jun", completed: 0, ongoing: 3 },
+];
+
+// Chart colors
+const COLORS = ["#3b82f6", "#10b981", "#f59e0b", "#6366f1"];
 
 const statusLabels: Record<string, string> = {
-  "completed": "Selesai",
-  "in-progress": "Sedang Diproses",
-  "review": "Dalam Review",
-  "draft": "Draft",
-  "rejected": "Ditolak",
-  "pending": "Menunggu",
+  completed: "Selesai",
+  in_progress: "Dalam Proses",
+  review: "Review",
+  pending: "Pending"
+};
+
+const statusColors: Record<string, string> = {
+  completed: "bg-green-100 text-green-800",
+  in_progress: "bg-blue-100 text-blue-800",
+  review: "bg-amber-100 text-amber-800",
+  pending: "bg-purple-100 text-purple-800"
+};
+
+type UserData = {
+  name: string;
+  email: string;
+  role: string;
 };
 
 const MitraDocumentManager = () => {
-  const { toast } = useToast();
-  const [folders, setFolders] = useState<Folder[]>(initialFolders);
-  const [activeTab, setActiveTab] = useState("documents");
-  const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
-  const [selectedFolder, setSelectedFolder] = useState<Folder | null>(null);
-  const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
-  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
-  const [isNewFolderDialogOpen, setIsNewFolderDialogOpen] = useState(false);
-  const [isRenameFolderDialogOpen, setIsRenameFolderDialogOpen] = useState(false);
-  const [documentFormData, setDocumentFormData] = useState({
-    name: "",
-    type: "",
-    file: null as File | null,
-  });
-  const [folderFormData, setFolderFormData] = useState({
-    name: "",
-  });
   const [searchTerm, setSearchTerm] = useState("");
-
-  const toggleFolder = (folderId: string) => {
-    setFolders(prevFolders => {
-      return prevFolders.map(folder => {
-        if (folder.id === folderId) {
-          return { ...folder, isOpen: !folder.isOpen };
-        }
-        // Check subfolders
-        if (folder.subfolders.length > 0) {
-          const updatedSubfolders = toggleSubfolders(folder.subfolders, folderId);
-          return { ...folder, subfolders: updatedSubfolders };
-        }
-        return folder;
-      });
-    });
-  };
-
-  const toggleSubfolders = (subfolders: Folder[], folderId: string): Folder[] => {
-    return subfolders.map(subfolder => {
-      if (subfolder.id === folderId) {
-        return { ...subfolder, isOpen: !subfolder.isOpen };
-      }
-      if (subfolder.subfolders.length > 0) {
-        const updatedSubfolders = toggleSubfolders(subfolder.subfolders, folderId);
-        return { ...subfolder, subfolders: updatedSubfolders };
-      }
-      return subfolder;
-    });
-  };
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setDocumentFormData(prev => ({
-        ...prev,
-        file: e.target.files![0],
-        type: e.target.files![0].type.split('/')[1].toUpperCase()
-      }));
-    }
-  };
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { name, value } = e.target;
-    setDocumentFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleFolderInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFolderFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
-  const handleUploadDocument = () => {
-    if (!documentFormData.name || !documentFormData.file) {
-      toast({
-        title: "Error",
-        description: "Mohon lengkapi semua field yang diperlukan",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const newDocument: Document = {
-      id: `doc-${Date.now()}`,
-      name: documentFormData.name,
-      type: documentFormData.type || "PDF",
-      status: "draft",
-      lastModified: new Date().toISOString().split('T')[0],
-      size: `${(documentFormData.file.size / (1024 * 1024)).toFixed(1)} MB`,
-      progress: 0
-    };
-
-    // Simulate upload progress
-    let progress = 0;
-    const progressInterval = setInterval(() => {
-      progress += 10;
-      if (progress <= 100) {
-        setFolders(prevFolders => {
-          return prevFolders.map(folder => {
-            if (folder.id === selectedFolder?.id) {
-              const updatedDocuments = [
-                ...folder.documents,
-                { ...newDocument, progress }
-              ].filter((doc, index, self) => 
-                index === self.findIndex(d => d.id === doc.id)
-              );
-              
-              return { ...folder, documents: updatedDocuments };
-            }
-            return folder;
-          });
-        });
-      } else {
-        clearInterval(progressInterval);
-        
-        // Update the document status to "pending" after upload
-        setFolders(prevFolders => {
-          return prevFolders.map(folder => {
-            if (folder.id === selectedFolder?.id) {
-              const updatedDocuments = folder.documents.map(doc => 
-                doc.id === newDocument.id ? { ...doc, status: "pending", progress: 100 } : doc
-              );
-              return { ...folder, documents: updatedDocuments };
-            }
-            return folder;
-          });
-        });
-        
-        toast({
-          title: "Berhasil",
-          description: "Dokumen berhasil diunggah"
-        });
-      }
-    }, 300);
-
-    // Add document to selected folder
-    if (selectedFolder) {
-      setFolders(prevFolders => {
-        return prevFolders.map(folder => {
-          if (folder.id === selectedFolder.id) {
-            return { 
-              ...folder, 
-              documents: [...folder.documents, { ...newDocument, progress: 0 }] 
-            };
-          }
-          return folder;
-        });
-      });
-    }
-
-    // Reset form and close dialog
-    setDocumentFormData({
-      name: "",
-      type: "",
-      file: null
-    });
-    setIsUploadDialogOpen(false);
-  };
-
-  const handleEditDocument = () => {
-    if (!documentFormData.name || !selectedDocument) {
-      toast({
-        title: "Error",
-        description: "Mohon lengkapi semua field yang diperlukan",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    // Update document in folders
-    setFolders(prevFolders => {
-      return prevFolders.map(folder => {
-        const updatedDocuments = folder.documents.map(doc => {
-          if (doc.id === selectedDocument.id) {
-            return {
-              ...doc,
-              name: documentFormData.name,
-              lastModified: new Date().toISOString().split('T')[0],
-              status: "in-progress"
-            };
-          }
-          return doc;
-        });
-        return { ...folder, documents: updatedDocuments };
-      });
-    });
-
-    // Reset form and close dialog
-    setDocumentFormData({
-      name: "",
-      type: "",
-      file: null
-    });
-    setIsEditDialogOpen(false);
-
-    toast({
-      title: "Berhasil",
-      description: "Dokumen berhasil diperbarui"
-    });
-  };
-
-  const handleCreateFolder = () => {
-    if (!folderFormData.name) {
-      toast({
-        title: "Error",
-        description: "Mohon masukkan nama folder",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    const newFolder: Folder = {
-      id: `folder-${Date.now()}`,
-      name: folderFormData.name,
-      documents: [],
-      subfolders: [],
-      isOpen: false
-    };
-
-    setFolders([...folders, newFolder]);
-    setFolderFormData({ name: "" });
-    setIsNewFolderDialogOpen(false);
-
-    toast({
-      title: "Berhasil",
-      description: "Folder baru berhasil dibuat"
-    });
-  };
-
-  const handleRenameFolder = () => {
-    if (!folderFormData.name || !selectedFolder) {
-      toast({
-        title: "Error",
-        description: "Mohon masukkan nama folder",
-        variant: "destructive"
-      });
-      return;
-    }
-
-    setFolders(prevFolders => {
-      return prevFolders.map(folder => {
-        if (folder.id === selectedFolder.id) {
-          return { ...folder, name: folderFormData.name };
-        }
-        return folder;
-      });
-    });
-
-    setFolderFormData({ name: "" });
-    setIsRenameFolderDialogOpen(false);
-
-    toast({
-      title: "Berhasil",
-      description: "Nama folder berhasil diperbarui"
-    });
-  };
-
-  const handleSendDocument = (document: Document) => {
-    // Update document status to "review"
-    setFolders(prevFolders => {
-      return prevFolders.map(folder => {
-        const updatedDocuments = folder.documents.map(doc => {
-          if (doc.id === document.id) {
-            return { ...doc, status: "review" };
-          }
-          return doc;
-        });
-        return { ...folder, documents: updatedDocuments };
-      });
-    });
-
-    toast({
-      title: "Dokumen Terkirim",
-      description: "Dokumen telah dikirim untuk direview"
-    });
-  };
-
-  const renderFolderTree = (folderList: Folder[], level = 0) => {
-    return folderList.map(folder => (
-      <div key={folder.id} className="mb-1">
-        <div 
-          className={`flex items-center p-2 rounded-md hover:bg-gray-100 cursor-pointer ${
-            selectedFolder?.id === folder.id ? 'bg-gray-100' : ''
-          }`}
-          style={{ paddingLeft: `${level * 16 + 8}px` }}
-          onClick={() => setSelectedFolder(folder)}
-        >
-          <Button variant="ghost" size="sm" className="p-0 mr-1" onClick={(e) => {
-            e.stopPropagation();
-            toggleFolder(folder.id);
-          }}>
-            {folder.isOpen ? <ChevronDown size={16} /> : <ChevronRight size={16} />}
-          </Button>
-          {folder.isOpen ? <FolderOpen size={18} className="mr-2 text-kap-blue" /> : <Folder size={18} className="mr-2 text-kap-gold" />}
-          <span className="flex-1 text-sm truncate">{folder.name}</span>
-          <Button variant="ghost" size="icon" className="h-8 w-8 ml-auto" onClick={(e) => {
-            e.stopPropagation();
-            setSelectedFolder(folder);
-            setFolderFormData({ name: folder.name });
-            setIsRenameFolderDialogOpen(true);
-          }}>
-            <Pencil size={14} />
-          </Button>
-        </div>
-        
-        {folder.isOpen && (
-          <>
-            {folder.documents.length > 0 && (
-              <div className="ml-8">
-                {folder.documents.map(doc => (
-                  <div 
-                    key={doc.id} 
-                    className="flex items-center p-2 rounded-md hover:bg-gray-100 cursor-pointer"
-                    style={{ paddingLeft: `${level * 16 + 24}px` }}
-                  >
-                    <FileText size={16} className="mr-2 text-gray-500" />
-                    <span className="text-sm truncate flex-1">{doc.name}</span>
-                    <Badge variant="outline" className={statusColors[doc.status]}>
-                      {statusLabels[doc.status]}
-                    </Badge>
-                  </div>
-                ))}
-              </div>
-            )}
-            {folder.subfolders.length > 0 && renderFolderTree(folder.subfolders, level + 1)}
-          </>
-        )}
-      </div>
-    ));
-  };
+  const [activeTab, setActiveTab] = useState("documents");
   
-  const findDocumentsInFolders = (folderList: Folder[], searchTerm: string): Document[] => {
-    let results: Document[] = [];
-    
-    folderList.forEach(folder => {
-      // Search in current folder's documents
-      const matchingDocs = folder.documents.filter(doc => 
-        doc.name.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-      results = [...results, ...matchingDocs];
-      
-      // Search in subfolders
-      if (folder.subfolders.length > 0) {
-        const subfoldersResults = findDocumentsInFolders(folder.subfolders, searchTerm);
-        results = [...results, ...subfoldersResults];
-      }
-    });
-    
-    return results;
+  // Filter documents based on search term
+  const filteredDocuments = mitraDocuments.filter(doc => 
+    doc.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
+    doc.client.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
+  // Filter folders based on search term
+  const filteredFolders = mitraFolders.filter(folder => 
+    folder.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+  
+  // Format date
+  const formatDate = (dateString: string) => {
+    return format(new Date(dateString), "dd MMMM yyyy", { locale: id });
   };
 
-  const allDocuments = searchTerm 
-    ? findDocumentsInFolders(folders, searchTerm)
-    : selectedFolder 
-      ? selectedFolder.documents
-      : folders.flatMap(folder => folder.documents);
+  // Calculate days remaining for audit projects
+  const calculateDaysRemaining = (endDate: string) => {
+    const end = new Date(endDate);
+    const today = new Date();
+    const diffTime = end.getTime() - today.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
 
+  // Calculate statistics
+  const totalDocuments = mitraDocuments.length;
+  const completedDocuments = mitraDocuments.filter(doc => doc.status === "completed").length;
+  const inProgressDocuments = mitraDocuments.filter(doc => doc.status === "in_progress").length;
+  const reviewDocuments = mitraDocuments.filter(doc => doc.status === "review").length;
+  
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Manajemen Dokumen Mitra</CardTitle>
-        <CardDescription>
-          Kelola dokumen dan folder mitra KAP MGI GAR SURABAYA
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <Tabs defaultValue={activeTab} onValueChange={setActiveTab} className="w-full">
-          <TabsList className="mb-4">
-            <TabsTrigger value="documents">Dokumen</TabsTrigger>
-            <TabsTrigger value="folders">Folder</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="documents" className="space-y-4">
-            <div className="flex flex-col md:flex-row gap-4 items-center">
-              <div className="relative flex-1">
-                <Input 
-                  placeholder="Cari dokumen..." 
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
-                <FileSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
+    <div className="space-y-6">
+      {/* Header - Audit Status Overview */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+        <Card className="bg-gradient-to-br from-blue-50 to-blue-100 border-blue-200">
+          <CardContent className="p-6 flex items-center">
+            <div className="bg-blue-500 p-3 rounded-full mr-4">
+              <FileText className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <p className="text-sm text-blue-700 font-medium">Total Dokumen</p>
+              <h3 className="text-2xl font-bold text-blue-900">{totalDocuments}</h3>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-green-50 to-green-100 border-green-200">
+          <CardContent className="p-6 flex items-center">
+            <div className="bg-green-500 p-3 rounded-full mr-4">
+              <FileText className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <p className="text-sm text-green-700 font-medium">Dokumen Selesai</p>
+              <h3 className="text-2xl font-bold text-green-900">{completedDocuments}</h3>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-amber-50 to-amber-100 border-amber-200">
+          <CardContent className="p-6 flex items-center">
+            <div className="bg-amber-500 p-3 rounded-full mr-4">
+              <FileText className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <p className="text-sm text-amber-700 font-medium">Dalam Proses</p>
+              <h3 className="text-2xl font-bold text-amber-900">{inProgressDocuments}</h3>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="bg-gradient-to-br from-purple-50 to-purple-100 border-purple-200">
+          <CardContent className="p-6 flex items-center">
+            <div className="bg-purple-500 p-3 rounded-full mr-4">
+              <FileText className="h-6 w-6 text-white" />
+            </div>
+            <div>
+              <p className="text-sm text-purple-700 font-medium">Dokumen Review</p>
+              <h3 className="text-2xl font-bold text-purple-900">{reviewDocuments}</h3>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Audit Progress Dashboard */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Progress Audit</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          {auditProgressData.map((audit) => (
+            <div key={audit.id} className="border rounded-lg p-4 space-y-4">
+              <div className="flex flex-col md:flex-row md:items-center md:justify-between">
+                <div>
+                  <h3 className="text-lg font-medium">{audit.project}</h3>
+                  <p className="text-sm text-gray-500">{audit.client}</p>
+                </div>
+                <Badge variant="outline" className={statusColors[audit.status]}>
+                  {statusLabels[audit.status]}
+                </Badge>
               </div>
               
-              <div className="flex space-x-2">
-                <Button 
-                  variant="outline" 
-                  className="flex items-center"
-                  onClick={() => {
-                    if (!selectedFolder) {
-                      toast({
-                        title: "Pilih Folder",
-                        description: "Silakan pilih folder terlebih dahulu",
-                        variant: "destructive"
-                      });
-                      return;
-                    }
-                    setIsUploadDialogOpen(true);
-                  }}
-                >
-                  <FileUp size={16} className="mr-2" />
-                  Unggah Baru
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex items-center"
-                  onClick={() => {
-                    if (!selectedDocument) {
-                      toast({
-                        title: "Pilih Dokumen",
-                        description: "Silakan pilih dokumen terlebih dahulu",
-                        variant: "destructive"
-                      });
-                      return;
-                    }
-                    setDocumentFormData({
-                      name: selectedDocument.name,
-                      type: selectedDocument.type,
-                      file: null
-                    });
-                    setIsEditDialogOpen(true);
-                  }}
-                >
-                  <FilePen size={16} className="mr-2" />
-                  Edit
-                </Button>
+              <div className="space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span>Progress</span>
+                  <span>{audit.progress}%</span>
+                </div>
+                <Progress value={audit.progress} className="h-2">
+                  <div 
+                    className={`h-full rounded-full ${
+                      audit.progress === 100 ? 'bg-green-500' : 
+                      audit.progress > 75 ? 'bg-blue-500' : 
+                      audit.progress > 50 ? 'bg-amber-500' : 'bg-red-500'
+                    }`} 
+                  />
+                </Progress>
+              </div>
+              
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                <div>
+                  <p className="text-gray-500">Periode:</p>
+                  <p>{formatDate(audit.startDate)} - {formatDate(audit.endDate)}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500">Sisa Waktu:</p>
+                  <p className={`font-medium ${
+                    calculateDaysRemaining(audit.endDate) < 10 ? 'text-red-600' : 
+                    calculateDaysRemaining(audit.endDate) < 20 ? 'text-amber-600' : 'text-green-600'
+                  }`}>
+                    {calculateDaysRemaining(audit.endDate) > 0 
+                      ? `${calculateDaysRemaining(audit.endDate)} hari` 
+                      : audit.status === 'completed' 
+                        ? 'Selesai' 
+                        : 'Tenggat terlampaui'}
+                  </p>
+                </div>
+                <div>
+                  <p className="text-gray-500">Tim:</p>
+                  <p>{audit.team.join(", ")}</p>
+                </div>
               </div>
             </div>
+          ))}
+        </CardContent>
+      </Card>
+
+      {/* Charts Section */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <Card>
+          <CardHeader>
+            <CardTitle>Distribusi Jenis Audit</CardTitle>
+          </CardHeader>
+          <CardContent className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <RechartsPieChart>
+                <Pie
+                  data={auditTypeData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={60}
+                  outerRadius={90}
+                  paddingAngle={2}
+                  dataKey="value"
+                  label={({name, percent}) => `${name} ${(percent * 100).toFixed(0)}%`}
+                >
+                  {auditTypeData.map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                  ))}
+                </Pie>
+                <Tooltip />
+                <Legend />
+              </RechartsPieChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Audit Bulanan 2024</CardTitle>
+          </CardHeader>
+          <CardContent className="h-80">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={monthlyAuditsData}>
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                <Bar dataKey="completed" name="Selesai" fill="#10b981" radius={[4, 4, 0, 0]} />
+                <Bar dataKey="ongoing" name="Dalam Proses" fill="#3b82f6" radius={[4, 4, 0, 0]} />
+              </BarChart>
+            </ResponsiveContainer>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Document Management Section */}
+      <Card>
+        <CardHeader>
+          <CardTitle>Dokumen</CardTitle>
+        </CardHeader>
+        <CardContent className="space-y-6">
+          <div className="flex flex-col sm:flex-row justify-between gap-4">
+            <div className="relative flex-1 max-w-md">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={18} />
+              <Input
+                placeholder="Cari dokumen atau folder..."
+                className="pl-10"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button className="flex items-center gap-2">
+                <UploadCloud size={18} />
+                <span>Unggah File</span>
+              </Button>
+              <Button variant="outline" className="flex items-center gap-2">
+                <FolderPlus size={18} />
+                <span>Buat Folder</span>
+              </Button>
+            </div>
+          </div>
+          
+          <Tabs defaultValue="documents" value={activeTab} onValueChange={setActiveTab}>
+            <TabsList>
+              <TabsTrigger value="documents" className="flex items-center">
+                <FileText size={16} className="mr-2" />
+                Dokumen
+              </TabsTrigger>
+              <TabsTrigger value="folders" className="flex items-center">
+                <Folder size={16} className="mr-2" />
+                Folder
+              </TabsTrigger>
+            </TabsList>
             
-            <div className="border rounded-md">
-              <div className="p-4">
-                <h3 className="text-lg font-medium mb-4">
-                  {selectedFolder ? `Folder: ${selectedFolder.name}` : 'Semua Dokumen'}
-                </h3>
-                
-                {allDocuments.length > 0 ? (
-                  <div className="space-y-3">
-                    {allDocuments.map(doc => (
-                      <div 
-                        key={doc.id}
-                        className={`p-3 border rounded-lg hover:bg-gray-50 cursor-pointer ${
-                          selectedDocument?.id === doc.id ? 'bg-gray-50 border-kap-navy' : ''
-                        }`}
-                        onClick={() => setSelectedDocument(doc)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center">
-                            <FileText size={20} className="mr-3 text-kap-blue" />
-                            <div>
-                              <p className="font-medium">{doc.name}</p>
-                              <div className="flex items-center text-sm text-gray-500">
-                                <span className="mr-3">{doc.type}</span>
-                                <span className="mr-3">{doc.size}</span>
-                                <Clock size={14} className="mr-1" />
-                                <span>{doc.lastModified}</span>
-                              </div>
+            <TabsContent value="documents" className="mt-4">
+              <div className="rounded-md border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nama Dokumen</TableHead>
+                      <TableHead>Klien</TableHead>
+                      <TableHead>Terakhir Diubah</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead className="text-right">Aksi</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredDocuments.length > 0 ? (
+                      filteredDocuments.map((doc) => (
+                        <TableRow key={doc.id}>
+                          <TableCell>
+                            <div className="flex items-center">
+                              <FileText size={16} className="mr-2 text-kap-blue" />
+                              <span>{doc.name}</span>
                             </div>
-                          </div>
-                          <div className="flex items-center space-x-2">
+                          </TableCell>
+                          <TableCell>{doc.client}</TableCell>
+                          <TableCell>{formatDate(doc.lastModified)}</TableCell>
+                          <TableCell>
                             <Badge variant="outline" className={statusColors[doc.status]}>
                               {statusLabels[doc.status]}
                             </Badge>
-                            
-                            <div className="flex space-x-1">
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-8 w-8"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setDocumentFormData({
-                                    name: doc.name,
-                                    type: doc.type,
-                                    file: null
-                                  });
-                                  setIsEditDialogOpen(true);
-                                  setSelectedDocument(doc);
-                                }}
-                              >
-                                <FilePen size={16} />
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex justify-end gap-2">
+                              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                                <Eye size={16} />
                               </Button>
-                              
-                              <Button 
-                                variant="ghost" 
-                                size="icon" 
-                                className="h-8 w-8 text-kap-blue"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  handleSendDocument(doc);
-                                }}
-                                disabled={doc.status === "review" || doc.status === "completed"}
-                              >
+                              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
+                                <Download size={16} />
+                              </Button>
+                              <Button size="sm" variant="ghost" className="h-8 w-8 p-0">
                                 <Send size={16} />
                               </Button>
                             </div>
-                          </div>
-                        </div>
-                        
-                        {/* Progress Bar for uploading documents */}
-                        {doc.progress < 100 && doc.status === "draft" && (
-                          <div className="mt-2">
-                            <Progress value={doc.progress} className="h-2" />
-                            <p className="text-xs text-gray-500 mt-1">Mengunggah... {doc.progress}%</p>
-                          </div>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    {searchTerm ? "Tidak ada dokumen yang ditemukan" : "Tidak ada dokumen dalam folder ini"}
-                  </div>
-                )}
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={5} className="text-center py-6 text-gray-500">
+                          Tidak ada dokumen yang ditemukan
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               </div>
-            </div>
-          </TabsContent>
-          
-          <TabsContent value="folders" className="space-y-4">
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="font-medium">Struktur Folder</h3>
-              <div className="flex space-x-2">
-                <Button 
-                  variant="outline" 
-                  className="flex items-center"
-                  onClick={() => setIsNewFolderDialogOpen(true)}
-                >
-                  <FolderPlus size={16} className="mr-2" />
-                  Buat Folder Baru
-                </Button>
-                <Button 
-                  variant="outline" 
-                  className="flex items-center"
-                  onClick={() => {
-                    if (!selectedFolder) {
-                      toast({
-                        title: "Pilih Folder",
-                        description: "Silakan pilih folder terlebih dahulu",
-                        variant: "destructive"
-                      });
-                      return;
-                    }
-                    setFolderFormData({ name: selectedFolder.name });
-                    setIsRenameFolderDialogOpen(true);
-                  }}
-                >
-                  <Pencil size={16} className="mr-2" />
-                  Ubah Nama
-                </Button>
+            </TabsContent>
+            
+            <TabsContent value="folders" className="mt-4">
+              <div className="rounded-md border overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Nama Folder</TableHead>
+                      <TableHead>Jumlah Dokumen</TableHead>
+                      <TableHead>Terakhir Diubah</TableHead>
+                      <TableHead className="text-right">Aksi</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredFolders.length > 0 ? (
+                      filteredFolders.map((folder) => (
+                        <TableRow key={folder.id}>
+                          <TableCell>
+                            <div className="flex items-center">
+                              <Folder size={16} className="mr-2 text-kap-navy" />
+                              <span>{folder.name}</span>
+                            </div>
+                          </TableCell>
+                          <TableCell>{folder.documentsCount} dokumen</TableCell>
+                          <TableCell>{formatDate(folder.lastModified)}</TableCell>
+                          <TableCell className="text-right">
+                            <Button size="sm" variant="outline">Buka</Button>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-6 text-gray-500">
+                          Tidak ada folder yang ditemukan
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
               </div>
-            </div>
-            
-            <div className="border rounded-md p-4">
-              {folders.length > 0 ? (
-                <div className="space-y-1">
-                  {renderFolderTree(folders)}
-                </div>
-              ) : (
-                <div className="text-center py-8 text-gray-500">
-                  Tidak ada folder yang tersedia
-                </div>
-              )}
-            </div>
-          </TabsContent>
-        </Tabs>
-      </CardContent>
-      
-      {/* Upload Document Dialog */}
-      <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Unggah Dokumen Baru</DialogTitle>
-            <DialogDescription>
-              Unggah dokumen baru ke folder yang dipilih
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="file">File Dokumen</Label>
-              <Input
-                id="file"
-                type="file"
-                onChange={handleFileChange}
-                className="cursor-pointer"
-              />
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="name">Nama Dokumen</Label>
-              <Input
-                id="name"
-                name="name"
-                value={documentFormData.name}
-                onChange={handleInputChange}
-                placeholder="Masukkan nama dokumen"
-              />
-            </div>
-            
-            {selectedFolder && (
-              <div className="text-sm text-gray-500">
-                Dokumen akan diunggah ke folder: <span className="font-medium">{selectedFolder.name}</span>
-              </div>
-            )}
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsUploadDialogOpen(false)}>
-              Batal
-            </Button>
-            <Button 
-              type="submit" 
-              onClick={handleUploadDocument}
-              disabled={!documentFormData.file || !documentFormData.name}
-            >
-              Unggah
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Edit Document Dialog */}
-      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Edit Dokumen</DialogTitle>
-            <DialogDescription>
-              Ubah informasi dokumen yang dipilih
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="editName">Nama Dokumen</Label>
-              <Input
-                id="editName"
-                name="name"
-                value={documentFormData.name}
-                onChange={handleInputChange}
-                placeholder="Masukkan nama dokumen"
-              />
-            </div>
-            
-            {selectedDocument && (
-              <div className="flex flex-col space-y-1 text-sm text-gray-500">
-                <div>Tipe: <span className="font-medium">{selectedDocument.type}</span></div>
-                <div>Ukuran: <span className="font-medium">{selectedDocument.size}</span></div>
-                <div>Status: <span className="font-medium">{statusLabels[selectedDocument.status]}</span></div>
-              </div>
-            )}
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
-              Batal
-            </Button>
-            <Button 
-              type="submit" 
-              onClick={handleEditDocument}
-              disabled={!documentFormData.name}
-            >
-              Simpan Perubahan
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      {/* New Folder Dialog */}
-      <Dialog open={isNewFolderDialogOpen} onOpenChange={setIsNewFolderDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Buat Folder Baru</DialogTitle>
-            <DialogDescription>
-              Tambahkan folder baru untuk mengorganisir dokumen
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="folderName">Nama Folder</Label>
-              <Input
-                id="folderName"
-                name="name"
-                value={folderFormData.name}
-                onChange={handleFolderInputChange}
-                placeholder="Masukkan nama folder"
-              />
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsNewFolderDialogOpen(false)}>
-              Batal
-            </Button>
-            <Button 
-              type="submit" 
-              onClick={handleCreateFolder}
-              disabled={!folderFormData.name}
-            >
-              Buat Folder
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-      
-      {/* Rename Folder Dialog */}
-      <Dialog open={isRenameFolderDialogOpen} onOpenChange={setIsRenameFolderDialogOpen}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle>Ubah Nama Folder</DialogTitle>
-            <DialogDescription>
-              Ubah nama folder yang dipilih
-            </DialogDescription>
-          </DialogHeader>
-          
-          <div className="space-y-4 py-2">
-            <div className="space-y-2">
-              <Label htmlFor="renameFolderName">Nama Folder</Label>
-              <Input
-                id="renameFolderName"
-                name="name"
-                value={folderFormData.name}
-                onChange={handleFolderInputChange}
-                placeholder="Masukkan nama folder baru"
-              />
-            </div>
-          </div>
-          
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setIsRenameFolderDialogOpen(false)}>
-              Batal
-            </Button>
-            <Button 
-              type="submit" 
-              onClick={handleRenameFolder}
-              disabled={!folderFormData.name}
-            >
-              Simpan Perubahan
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
-    </Card>
+            </TabsContent>
+          </Tabs>
+        </CardContent>
+      </Card>
+    </div>
   );
 };
 

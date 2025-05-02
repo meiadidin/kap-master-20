@@ -11,7 +11,6 @@ import {
   LogOut,
   ChevronLeft,
   ChevronRight,
-  BarChart3,
   Menu,
   Folder
 } from "lucide-react";
@@ -95,7 +94,7 @@ const DashboardSidebar = ({
       });
     } else if (currentUser.role === "mitra") {
       items.push({
-        label: "Manajemen Dokumen",
+        label: "Dokumen",
         value: "mitra",
         icon: <Folder size={20} />,
         roles: ["mitra"]
