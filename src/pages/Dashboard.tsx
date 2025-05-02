@@ -1,174 +1,110 @@
 
-import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import DashboardOverview from "@/components/dashboard/DashboardOverview";
+import { useState, useEffect } from "react";
+import { useNavigate, Routes, Route } from "react-router-dom";
+import { useToast } from "@/hooks/use-toast";
 import DashboardSidebar from "@/components/dashboard/DashboardSidebar";
+import DashboardOverview from "@/components/dashboard/DashboardOverview";
 import ClientsList from "@/components/dashboard/ClientsList";
 import DocumentsList from "@/components/dashboard/DocumentsList";
-import UsersList from "@/components/dashboard/UsersList";
-import UserProfile from "@/components/dashboard/UserProfile";
-import Settings from "@/components/dashboard/Settings";
 import ChatSidebar from "@/components/dashboard/ChatSidebar";
-import { useToast } from "@/hooks/use-toast";
-import { useIsMobile } from "@/hooks/use-mobile";
-
-type UserData = {
-  name: string;
-  email: string;
-  role: string;
-};
+import MitraDashboard from "@/components/dashboard/MitraDashboard";
 
 const Dashboard = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const [currentUser, setCurrentUser] = useState<UserData | null>(null);
   const [activeTab, setActiveTab] = useState("overview");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
-  const isMobile = useIsMobile();
-  
+  const [isSidebarOpen, setIsSidebarOpen] = useState(true);
+  const [currentUser, setCurrentUser] = useState({
+    name: "",
+    email: "",
+    role: ""
+  });
+
   useEffect(() => {
     // Check if user is logged in
-    const userStr = sessionStorage.getItem("currentUser");
-    if (!userStr) {
+    const storedUser = sessionStorage.getItem('currentUser');
+    if (!storedUser) {
       toast({
         title: "Akses Ditolak",
-        description: "Silakan login terlebih dahulu",
-        variant: "destructive",
+        description: "Silakan login terlebih dahulu untuk mengakses dashboard.",
+        variant: "destructive"
       });
       navigate("/login");
       return;
     }
-    
-    try {
-      const user = JSON.parse(userStr);
-      setCurrentUser(user);
-    } catch (error) {
-      sessionStorage.removeItem("currentUser");
-      navigate("/login");
-    }
-    
-    // If on mobile, close the sidebar by default
-    if (isMobile) {
-      setSidebarOpen(false);
-    }
-  }, [navigate, toast, isMobile]);
+
+    // Set current user
+    setCurrentUser(JSON.parse(storedUser));
+  }, [navigate, toast]);
 
   const handleLogout = () => {
-    sessionStorage.removeItem("currentUser");
+    // Clear user data
+    sessionStorage.removeItem('currentUser');
+    
     toast({
       title: "Logout Berhasil",
-      description: "Anda telah berhasil keluar dari sistem",
+      description: "Anda telah keluar dari sistem."
     });
+    
+    // Redirect to login page
     navigate("/login");
   };
 
   const toggleSidebar = () => {
-    setSidebarOpen(!sidebarOpen);
+    setIsSidebarOpen(!isSidebarOpen);
   };
-  
-  if (!currentUser) {
-    return null; // Will redirect in useEffect
-  }
+
+  const renderActiveTab = () => {
+    const renderContent = () => {
+      switch (activeTab) {
+        case "overview":
+          return <DashboardOverview currentUser={currentUser} />;
+        case "clients":
+          return <ClientsList currentUser={currentUser} />;
+        case "documents":
+          return <DocumentsList currentUser={currentUser} />;
+        case "mitra":
+          return <MitraDashboard currentUser={currentUser} />;
+        default:
+          return <div>Coming soon...</div>;
+      }
+    };
+
+    return (
+      <div className="p-6 flex-1">
+        {renderContent()}
+      </div>
+    );
+  };
+
+  // Special case for mitra users to show their dashboard
+  useEffect(() => {
+    if (currentUser.role === "mitra") {
+      setActiveTab("mitra");
+    }
+  }, [currentUser.role]);
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <DashboardSidebar 
+    <div className="flex min-h-screen bg-gray-50">
+      <DashboardSidebar
         currentUser={currentUser}
-        activeTab={activeTab} 
+        activeTab={activeTab}
         setActiveTab={setActiveTab}
-        isOpen={sidebarOpen}
+        isOpen={isSidebarOpen}
         toggleSidebar={toggleSidebar}
         onLogout={handleLogout}
       />
       
-      <main className={`flex-1 overflow-y-auto p-2 sm:p-4 md:p-6 ${isMobile ? "pt-14" : "mr-[3.5rem]"}`}>
-        <div className="container mx-auto max-w-7xl">
-          <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-              <h1 className="text-xl sm:text-2xl font-bold text-kap-navy">Dashboard</h1>
-              <TabsList className="hidden md:flex">
-                <TabsTrigger value="overview">Overview</TabsTrigger>
-                {(currentUser.role === "admin" || currentUser.role === "manager") && (
-                  <>
-                    <TabsTrigger value="clients">Klien</TabsTrigger>
-                    <TabsTrigger value="documents">Dokumen</TabsTrigger>
-                    <TabsTrigger value="users">Pengguna</TabsTrigger>
-                  </>
-                )}
-                {currentUser.role === "auditor" && (
-                  <>
-                    <TabsTrigger value="clients">Klien</TabsTrigger>
-                    <TabsTrigger value="documents">Dokumen</TabsTrigger>
-                  </>
-                )}
-                {currentUser.role === "client" && (
-                  <TabsTrigger value="documents">Dokumen</TabsTrigger>
-                )}
-                <TabsTrigger value="profile">Profil</TabsTrigger>
-                <TabsTrigger value="settings">Pengaturan</TabsTrigger>
-              </TabsList>
-              
-              {/* Mobile tabs dropdown */}
-              <div className="md:hidden w-full">
-                <select 
-                  className="w-full bg-white border border-gray-300 rounded-md py-2 px-3"
-                  value={activeTab}
-                  onChange={(e) => setActiveTab(e.target.value)}
-                >
-                  <option value="overview">Overview</option>
-                  {(currentUser.role === "admin" || currentUser.role === "manager") && (
-                    <>
-                      <option value="clients">Klien</option>
-                      <option value="documents">Dokumen</option>
-                      <option value="users">Pengguna</option>
-                    </>
-                  )}
-                  {currentUser.role === "auditor" && (
-                    <>
-                      <option value="clients">Klien</option>
-                      <option value="documents">Dokumen</option>
-                    </>
-                  )}
-                  {currentUser.role === "client" && (
-                    <option value="documents">Dokumen</option>
-                  )}
-                  <option value="profile">Profil</option>
-                  <option value="settings">Pengaturan</option>
-                </select>
-              </div>
-            </div>
-
-            <TabsContent value="overview" className="space-y-4">
-              <DashboardOverview currentUser={currentUser} />
-            </TabsContent>
-            
-            <TabsContent value="clients" className="space-y-4">
-              <ClientsList currentUser={currentUser} />
-            </TabsContent>
-            
-            <TabsContent value="documents" className="space-y-4">
-              <DocumentsList currentUser={currentUser} />
-            </TabsContent>
-
-            {currentUser.role === "admin" && (
-              <TabsContent value="users" className="space-y-4">
-                <UsersList />
-              </TabsContent>
-            )}
-            
-            <TabsContent value="profile" className="space-y-4">
-              <UserProfile currentUser={currentUser} />
-            </TabsContent>
-            
-            <TabsContent value="settings" className="space-y-4">
-              <Settings currentUser={currentUser} />
-            </TabsContent>
-          </Tabs>
+      <main className={`flex-1 transition-all duration-300 ${isSidebarOpen ? 'md:ml-64' : ''}`}>
+        <div className="container mx-auto py-6">
+          <Routes>
+            <Route path="*" element={renderActiveTab()} />
+          </Routes>
         </div>
       </main>
       
-      <ChatSidebar currentUserId={0} />
+      {/* Chat sidebar */}
+      <ChatSidebar />
     </div>
   );
 };

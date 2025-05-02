@@ -16,8 +16,13 @@ const Navbar = () => {
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <Link to="/" className="flex items-center">
-            <span className="text-kap-navy font-poppins font-bold text-2xl">KAP MGI GAR</span>
-            <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">SURABAYA</span>
+            <div className="flex flex-col">
+              <div className="flex items-center">
+                <span className="text-kap-navy font-poppins font-bold text-2xl">MGI Gideon Adi & Rekan</span>
+                <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">SURABAYA</span>
+              </div>
+              <span className="text-gray-500 text-xs italic">a member of mgi worldwide</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}

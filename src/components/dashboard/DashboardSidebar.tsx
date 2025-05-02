@@ -12,7 +12,8 @@ import {
   ChevronLeft,
   ChevronRight,
   BarChart3,
-  Menu
+  Menu,
+  Folder
 } from "lucide-react";
 
 type UserData = {
@@ -92,6 +93,13 @@ const DashboardSidebar = ({
         icon: <FileText size={20} />,
         roles: ["admin", "manager", "auditor", "client"]
       });
+    } else if (currentUser.role === "mitra") {
+      items.push({
+        label: "Manajemen Dokumen",
+        value: "mitra",
+        icon: <Folder size={20} />,
+        roles: ["mitra"]
+      });
     }
     
     // Common items for all users
@@ -100,13 +108,13 @@ const DashboardSidebar = ({
         label: "Profil",
         value: "profile",
         icon: <User size={20} />,
-        roles: ["admin", "manager", "auditor", "client"]
+        roles: ["admin", "manager", "auditor", "client", "mitra"]
       },
       {
         label: "Pengaturan",
         value: "settings",
         icon: <Settings size={20} />,
-        roles: ["admin", "manager", "auditor", "client"]
+        roles: ["admin", "manager", "auditor", "client", "mitra"]
       }
     );
     
@@ -138,8 +146,13 @@ const DashboardSidebar = ({
           <div className="p-4 bg-kap-navy text-white">
             <div className="flex justify-between items-center">
               <Link to="/" className="flex items-center">
-                <span className="font-poppins font-bold text-lg">KAP MGI GAR</span>
-                <span className="text-kap-gold font-poppins font-bold text-lg ml-1">SURABAYA</span>
+                <div className="flex flex-col">
+                  <div className="flex items-center">
+                    <span className="font-poppins font-bold text-sm">MGI Gideon Adi & Rekan</span>
+                    <span className="text-kap-gold font-poppins font-bold text-sm ml-1">SURABAYA</span>
+                  </div>
+                  <span className="text-gray-300 text-xs italic">a member of mgi worldwide</span>
+                </div>
               </Link>
               <button onClick={toggleSidebar} className="md:hidden">
                 <ChevronLeft size={20} />

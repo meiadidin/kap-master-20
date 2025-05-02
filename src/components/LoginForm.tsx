@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -23,7 +24,8 @@ const dummyUsers = [
   { email: "client2@example.com", password: "client123", role: "client", name: "CV Teknologi Nusantara" },
   { email: "client3@example.com", password: "client123", role: "client", name: "PT Sejahtera Abadi" },
   { email: "client4@example.com", password: "client123", role: "client", name: "PT Bintang Timur" },
-  { email: "client5@example.com", password: "client123", role: "client", name: "PT Global Indonesia" }
+  { email: "client5@example.com", password: "client123", role: "client", name: "PT Global Indonesia" },
+  { email: "mitra1@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Utama" }
 ];
 
 const LoginForm = () => {
@@ -115,6 +117,7 @@ const LoginForm = () => {
             <SelectItem value="manager">Manajer</SelectItem>
             <SelectItem value="auditor">Auditor</SelectItem>
             <SelectItem value="client">Klien</SelectItem>
+            <SelectItem value="mitra">Mitra</SelectItem>
             <SelectItem value="any">Semua Tipe</SelectItem>
           </SelectContent>
         </Select>
@@ -158,11 +161,6 @@ const LoginForm = () => {
           >
             {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
           </button>
-        </div>
-        <div className="mt-2 text-right">
-          <a href="/lupa-password" className="text-sm text-kap-blue hover:underline">
-            Lupa password?
-          </a>
         </div>
       </div>
 
