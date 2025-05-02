@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -228,7 +227,7 @@ const UsersList = ({ currentUser }: { currentUser: UserData }) => {
       name: newUserForm.name,
       email: newUserForm.email,
       role: newUserForm.role,
-      status: "active",
+      status: "active", // Explicitly using the literal type here
       lastLogin: "-",
       initial: initials
     };
@@ -255,7 +254,8 @@ const UsersList = ({ currentUser }: { currentUser: UserData }) => {
   const toggleUserStatus = (userId: string) => {
     const updatedUsers = users.map(user => {
       if (user.id === userId) {
-        const newStatus = user.status === "active" ? "inactive" : "active";
+        // Explicitly type the new status as one of the allowed literal types
+        const newStatus: "active" | "inactive" = user.status === "active" ? "inactive" : "active";
         return { ...user, status: newStatus };
       }
       return user;
