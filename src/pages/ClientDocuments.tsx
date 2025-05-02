@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+
+import React, { useState, useEffect, Fragment } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Card,
@@ -561,7 +562,7 @@ const ClientDocuments = () => {
               </BreadcrumbItem>
               
               {breadcrumbs.map((crumb, index) => (
-                <React.Fragment key={index}>
+                <Fragment key={index}>
                   <BreadcrumbSeparator />
                   <BreadcrumbItem>
                     {index === breadcrumbs.length - 1 ? (
@@ -572,7 +573,7 @@ const ClientDocuments = () => {
                       </BreadcrumbLink>
                     )}
                   </BreadcrumbItem>
-                </React.Fragment>
+                </Fragment>
               ))}
             </BreadcrumbList>
           </Breadcrumb>
