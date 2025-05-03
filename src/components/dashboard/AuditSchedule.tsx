@@ -1,10 +1,10 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Filter, Search } from "lucide-react";
+import { Calendar as CalendarIcon, ChevronLeft, ChevronRight, Filter, Search, Plus } from "lucide-react";
 import { Calendar } from "@/components/ui/calendar";
 import {
   Popover,
@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue
 } from "@/components/ui/select";
+import AddAuditScheduleForm from "./AddAuditScheduleForm";
 
 // Data jadwal audit
 const auditScheduleData = [
@@ -127,6 +128,21 @@ const AuditSchedule = () => {
   const [filterStatus, setFilterStatus] = useState("all");
   const [date, setDate] = useState<Date | undefined>(undefined);
   const [view, setView] = useState<"list" | "calendar">("list");
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState<{role: string} | null>(null);
+
+  // Get current user from session storage
+  useEffect(() => {
+    const userData = sessionStorage.getItem("currentUser");
+    if (userData) {
+      setCurrentUser(JSON.parse(userData));
+    }
+  }, []);
+
+  // Check if user has permission to add audit schedules
+  const canAddSchedule = () => {
+    return currentUser && ["managingpartner", "partner"].includes(currentUser.role);
+  };
 
   // Filter jadwal berdasarkan status dan pencarian
   const filteredSchedule = auditScheduleData.filter(audit => 
@@ -232,9 +248,15 @@ const AuditSchedule = () => {
             </Button>
           </div>
           
-          <Button className="flex items-center gap-2">
-            <span>Tambah Jadwal</span>
-          </Button>
+          {canAddSchedule() && (
+            <Button 
+              className="flex items-center gap-2"
+              onClick={() => setIsFormOpen(true)}
+            >
+              <Plus size={16} />
+              <span>Tambah Jadwal</span>
+            </Button>
+          )}
         </div>
       </div>
       
@@ -368,6 +390,12 @@ const AuditSchedule = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Add Schedule Form Modal */}
+      <AddAuditScheduleForm 
+        isOpen={isFormOpen} 
+        onClose={() => setIsFormOpen(false)} 
+      />
     </div>
   );
 };
