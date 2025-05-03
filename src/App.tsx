@@ -16,7 +16,8 @@ import ClientDocuments from "./pages/ClientDocuments";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
-import Careers from "./pages/Careers"; // Add import for new Careers page
+import Careers from "./pages/Careers";
+import ServiceOrderPage from "./pages/ServiceOrderPage";
 
 // Service Detail Pages
 import AuditKeuangan from "./pages/services/AuditKeuangan";
@@ -58,6 +59,18 @@ const App = () => (
             element={<ForgotPassword />} 
           />
           <Route 
+            path="/pesan-layanan" 
+            element={
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow">
+                  <ServiceOrderPage />
+                </main>
+                <Footer />
+              </div>
+            } 
+          />
+          <Route 
             path="*" 
             element={
               <div className="flex flex-col min-h-screen">
@@ -69,7 +82,7 @@ const App = () => (
                     <Route path="/layanan" element={<Services />} />
                     <Route path="/tim-kami" element={<Team />} />
                     <Route path="/kontak" element={<Contact />} />
-                    <Route path="/karir" element={<Careers />} /> {/* Add new Careers route */}
+                    <Route path="/karir" element={<Careers />} />
                     
                     {/* Service Detail Routes */}
                     <Route path="/layanan/audit-keuangan" element={<AuditKeuangan />} />

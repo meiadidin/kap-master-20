@@ -1,29 +1,38 @@
 
-import { Link } from "react-router-dom";
-import { ArrowRight } from "lucide-react";
-import { cn } from "@/lib/utils";
+import React from 'react';
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 
 interface ServiceCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
-  link: string;
-  className?: string;
+  onSelect: () => void;
 }
 
-const ServiceCard = ({ title, description, icon, link, className }: ServiceCardProps) => {
+const ServiceCard = ({ title, description, icon, onSelect }: ServiceCardProps) => {
   return (
-    <div className={cn("bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-xl border border-gray-100", className)}>
-      <div className="bg-kap-light inline-flex p-3 rounded-full mb-6 text-kap-navy">
-        {icon}
-      </div>
-      <h3 className="text-xl font-semibold mb-3 text-kap-navy">{title}</h3>
-      <p className="text-gray-600 mb-6">{description}</p>
-      <Link to={link} className="flex items-center text-kap-blue hover:text-kap-navy font-medium">
-        <span>Pelajari lebih lanjut</span>
-        <ArrowRight size={18} className="ml-2" />
-      </Link>
-    </div>
+    <Card className="h-full transition-all duration-300 hover:shadow-lg border-gray-200">
+      <CardHeader className="pb-4">
+        <div className="flex items-center gap-3">
+          <div className="p-2 rounded-full bg-kap-light text-kap-navy">
+            {icon}
+          </div>
+          <h3 className="font-semibold text-lg text-kap-navy">{title}</h3>
+        </div>
+      </CardHeader>
+      <CardContent className="pb-4">
+        <p className="text-gray-600">{description}</p>
+      </CardContent>
+      <CardFooter>
+        <Button 
+          onClick={onSelect} 
+          className="w-full bg-kap-navy hover:bg-kap-blue text-white"
+        >
+          Pilih Layanan Ini
+        </Button>
+      </CardFooter>
+    </Card>
   );
 };
 
