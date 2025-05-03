@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -93,7 +92,7 @@ const priorityOptions = [
   { value: "low", label: "Rendah" },
 ];
 
-// Form schema with Zod validation
+// Form schema with Zod validation - Fixed refine method
 const formSchema = z.object({
   clientId: z.number({
     required_error: "Silakan pilih klien",
@@ -106,15 +105,16 @@ const formSchema = z.object({
   }),
   endDate: z.date({
     required_error: "Silakan pilih tanggal selesai",
-  }).refine(
-    (date, ctx) => {
-      const startDate = ctx.path?.[0] === "endDate" ? (ctx.parent as any).startDate : undefined;
-      return !startDate || date >= startDate;
-    },
-    {
-      message: "Tanggal selesai harus setelah tanggal mulai",
+  }).superRefine((endDate, ctx) => {
+    // Get the startDate from the context
+    const startDate = ctx.parent.startDate;
+    if (startDate && endDate < startDate) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Tanggal selesai harus setelah tanggal mulai",
+      });
     }
-  ),
+  }),
   teamMembers: z.array(z.number()).min(1, {
     message: "Pilih minimal 1 anggota tim",
   }),
@@ -165,34 +165,6 @@ const AddAuditScheduleForm: React.FC<AddAuditScheduleFormProps> = ({
       setSelectedTeamMembers([]);
       onClose();
     }, 1000);
-
-    // In a real implementation, you would make an API call here
-    // try {
-    //   const response = await fetch('/api/audit-schedules', {
-    //     method: 'POST',
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //     },
-    //     body: JSON.stringify(data),
-    //   });
-    //   const result = await response.json();
-    //   if (!response.ok) throw new Error(result.message || 'Terjadi kesalahan');
-    //   toast({
-    //     title: "Jadwal audit berhasil dibuat",
-    //     description: `Jadwal audit untuk ${mockClients.find(c => c.id === data.clientId)?.name} telah berhasil ditambahkan.`,
-    //   });
-    //   form.reset();
-    //   setSelectedTeamMembers([]);
-    //   onClose();
-    // } catch (error) {
-    //   toast({
-    //     title: "Gagal membuat jadwal audit",
-    //     description: error.message,
-    //     variant: "destructive",
-    //   });
-    // } finally {
-    //   setIsSubmitting(false);
-    // }
   };
 
   const toggleTeamMember = (memberId: number) => {
