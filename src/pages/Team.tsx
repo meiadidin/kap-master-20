@@ -2,6 +2,8 @@
 import Hero from "@/components/Hero";
 import TeamMember from "@/components/TeamMember";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Link } from "react-router-dom";
+import { Button } from "@/components/ui/button";
 
 const Team = () => {
   const leadershipTeam = [
@@ -245,9 +247,11 @@ const Team = () => {
                     <p>Jalur karir yang jelas</p>
                   </div>
                 </div>
-                <button className="mt-8 bg-kap-gold hover:bg-kap-light-gold text-kap-navy font-medium px-6 py-3 rounded">
-                  Lihat Lowongan
-                </button>
+                <Link to="/karir">
+                  <Button className="mt-8 bg-kap-gold hover:bg-kap-light-gold text-kap-navy font-medium px-6 py-3 rounded">
+                    Lihat Lowongan
+                  </Button>
+                </Link>
               </div>
               <div className="bg-cover bg-center h-64 md:h-auto" style={{ backgroundImage: "url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80')" }}></div>
             </div>

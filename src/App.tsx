@@ -16,6 +16,7 @@ import ClientDocuments from "./pages/ClientDocuments";
 import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import Careers from "./pages/Careers"; // Add import for new Careers page
 
 // Service Detail Pages
 import AuditKeuangan from "./pages/services/AuditKeuangan";
@@ -68,6 +69,7 @@ const App = () => (
                     <Route path="/layanan" element={<Services />} />
                     <Route path="/tim-kami" element={<Team />} />
                     <Route path="/kontak" element={<Contact />} />
+                    <Route path="/karir" element={<Careers />} /> {/* Add new Careers route */}
                     
                     {/* Service Detail Routes */}
                     <Route path="/layanan/audit-keuangan" element={<AuditKeuangan />} />
