@@ -64,12 +64,12 @@ export default {
 					ring: 'hsl(var(--sidebar-ring))'
 				},
 				kap: {
-					'navy': '#0B2447',
-					'blue': '#19376D',
-					'light-blue': '#576CBC',
-					'gold': '#D4AF37',
-					'light-gold': '#F5E7A0',
-					'light': '#F1F6F9'
+					'navy': '#05396B',
+					'blue': '#0B60AD',
+					'light-blue': '#3C91E6',
+					'gold': '#F1C40F',
+					'light-gold': '#F9E79F',
+					'light': '#F4F8FC'
 				}
 			},
 			borderRadius: {
@@ -78,8 +78,8 @@ export default {
 				sm: 'calc(var(--radius) - 4px)'
 			},
 			fontFamily: {
-				poppins: ['Poppins', 'sans-serif'],
-				opensans: ['Open Sans', 'sans-serif']
+				montserrat: ['Montserrat', 'sans-serif'],
+				merriweather: ['Merriweather', 'serif']
 			},
 			keyframes: {
 				'accordion-down': {

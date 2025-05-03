@@ -104,7 +104,7 @@ const Careers = () => {
         height="h-[400px]"
       />
       
-      <section className="py-12 bg-gray-50">
+      <section className="py-12 bg-kap-light">
         <div className="container mx-auto px-4">
           <div className="max-w-5xl mx-auto">
             <h2 className="text-2xl md:text-3xl font-bold text-kap-navy mb-8 text-center">

@@ -1,5 +1,5 @@
 
-@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Open+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Merriweather:wght@300;400;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,52 +7,52 @@
 
 @layer base {
   :root {
-    --background: 210 40% 98%;
-    --foreground: 222.2 84% 4.9%;
+    --background: 210 33% 98%;
+    --foreground: 220 40% 15%;
 
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 220 40% 15%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 220 40% 15%;
 
-    --primary: 222 47% 11%;
+    --primary: 210 100% 35%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    --secondary: 45 100% 50%;
+    --secondary-foreground: 220 40% 15%;
 
     --muted: 210 40% 96.1%;
     --muted-foreground: 215.4 16.3% 46.9%;
 
     --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    --accent-foreground: 220 40% 15%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --ring: 220 40% 15%;
 
     --radius: 0.5rem;
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
+    --background: 220 40% 15%;
     --foreground: 210 40% 98%;
 
-    --card: 222.2 84% 4.9%;
+    --card: 220 40% 18%;
     --card-foreground: 210 40% 98%;
 
-    --popover: 222.2 84% 4.9%;
+    --popover: 220 40% 15%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
+    --primary: 210 100% 45%;
+    --primary-foreground: 220 40% 15%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 45 100% 60%;
+    --secondary-foreground: 220 40% 15%;
 
     --muted: 217.2 32.6% 17.5%;
     --muted-foreground: 215 20.2% 65.1%;
@@ -75,14 +75,14 @@
   }
 
   body {
-    @apply bg-background text-foreground font-opensans;
+    @apply bg-background text-foreground font-montserrat;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-poppins font-semibold;
+    @apply font-merriweather font-semibold;
   }
 }
 
 .hero-gradient {
-  background: linear-gradient(90deg, rgba(11,36,71,0.9) 0%, rgba(25,55,109,0.8) 100%);
+  background: linear-gradient(90deg, rgba(5,57,107,0.95) 0%, rgba(11,96,173,0.85) 100%);
 }

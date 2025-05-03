@@ -1,8 +1,19 @@
+
 #root {
   max-width: 1280px;
   margin: 0 auto;
   padding: 2rem;
   text-align: center;
+}
+
+body {
+  font-family: 'Montserrat', sans-serif;
+  color: hsl(220 40% 15%);
+  background-color: hsl(210 33% 98%);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Merriweather', serif;
 }
 
 .logo {
@@ -12,10 +23,10 @@
   transition: filter 300ms;
 }
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  filter: drop-shadow(0 0 2em #05396Baa);
 }
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  filter: drop-shadow(0 0 2em #0B60ADaa);
 }
 
 @keyframes logo-spin {
