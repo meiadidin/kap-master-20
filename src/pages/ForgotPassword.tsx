@@ -49,16 +49,16 @@ const ForgotPassword = () => {
         <CardHeader className="bg-kap-navy p-6">
           <div className="flex justify-center">
             <Link to="/" className="flex items-center">
-              <span className="text-white font-poppins font-bold text-2xl">KAP MGI GAR</span>
-              <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">SURABAYA</span>
+              <span className="text-white font-merriweather font-bold text-2xl">KAP MGI GAR</span>
+              <span className="text-kap-gold font-merriweather font-bold text-2xl ml-1">SURABAYA</span>
             </Link>
           </div>
         </CardHeader>
         <CardContent className="p-8">
           <div className="text-center mb-8">
-            <h1 className="text-2xl font-bold text-kap-navy mb-2">Lupa Password?</h1>
+            <h1 className="text-2xl font-bold text-kap-navy mb-2 font-merriweather">Lupa Password?</h1>
             {!submitted ? (
-              <p className="text-gray-600">
+              <p className="text-gray-600 font-montserrat">
                 Masukkan alamat email Anda untuk menerima instruksi reset password
               </p>
             ) : (
@@ -66,7 +66,7 @@ const ForgotPassword = () => {
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
                   <Mail className="text-green-600" size={32} />
                 </div>
-                <p className="text-gray-600">
+                <p className="text-gray-600 font-montserrat">
                   Periksa email Anda untuk instruksi reset password. Jika Anda tidak menerima email dalam beberapa menit, periksa folder spam Anda.
                 </p>
               </div>
@@ -76,7 +76,7 @@ const ForgotPassword = () => {
           {!submitted ? (
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label htmlFor="email" className="block text-sm font-medium mb-2">
+                <label htmlFor="email" className="block text-sm font-medium mb-2 font-montserrat">
                   Email
                 </label>
                 <Input
@@ -86,13 +86,13 @@ const ForgotPassword = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Masukkan alamat email Anda"
                   required
-                  className="w-full"
+                  className="w-full font-montserrat"
                 />
               </div>
               
               <Button
                 type="submit"
-                className="bg-kap-navy hover:bg-kap-blue text-white w-full"
+                className="bg-kap-navy hover:bg-kap-blue text-white w-full font-montserrat"
                 disabled={loading}
               >
                 {loading ? "Memproses..." : "Kirim Instruksi Reset"}
@@ -101,7 +101,7 @@ const ForgotPassword = () => {
           ) : (
             <Button
               onClick={() => setSubmitted(false)}
-              className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-full mt-4"
+              className="bg-gray-200 hover:bg-gray-300 text-gray-800 w-full mt-4 font-montserrat"
             >
               Kirim Ulang
             </Button>
@@ -109,7 +109,7 @@ const ForgotPassword = () => {
         </CardContent>
         
         <CardFooter className="justify-center p-6 pt-0">
-          <p className="text-center text-gray-600">
+          <p className="text-center text-gray-600 font-montserrat">
             <Link to="/login" className="text-kap-blue hover:underline">
               Kembali ke halaman login
             </Link>

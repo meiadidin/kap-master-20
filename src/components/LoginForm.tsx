@@ -153,7 +153,7 @@ const LoginForm = () => {
           <Label htmlFor="password" className="block text-sm font-medium text-gray-900">
             Password
           </Label>
-          <a href="/lupa-password" className="text-sm text-blue-600 hover:text-blue-800">
+          <a href="/lupa-password" className="text-sm text-kap-blue hover:text-kap-navy">
             Lupa password?
           </a>
         </div>
@@ -185,7 +185,7 @@ const LoginForm = () => {
           type="checkbox"
           checked={rememberMe}
           onChange={() => setRememberMe(!rememberMe)}
-          className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+          className="h-4 w-4 text-kap-blue focus:ring-kap-blue border-gray-300 rounded"
         />
         <Label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700">
           Ingat Saya

@@ -4,21 +4,21 @@ import { Link } from "react-router-dom";
 
 const Login = () => {
   return (
-    <div className="min-h-screen flex bg-gradient-to-br from-white to-gray-100">
+    <div className="login-container">
       {/* Left side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-        <div className="max-w-md w-full space-y-6 bg-white p-8 rounded-xl shadow-lg">
+        <div className="login-card">
           <div className="text-center">
             <Link to="/" className="inline-block">
               <div className="flex flex-col items-center">
                 <div className="flex items-center">
-                  <span className="text-kap-navy font-poppins font-bold text-2xl">MGI Gideon Adi & Rekan</span>
-                  <span className="text-kap-gold font-poppins font-bold text-2xl ml-1">SURABAYA</span>
+                  <span className="text-kap-navy font-merriweather font-bold text-2xl">MGI Gideon Adi & Rekan</span>
+                  <span className="text-kap-gold font-merriweather font-bold text-2xl ml-1">SURABAYA</span>
                 </div>
-                <span className="text-gray-500 text-sm italic">a member of mgi worldwide</span>
+                <span className="text-gray-500 text-sm italic font-montserrat">a member of mgi worldwide</span>
               </div>
             </Link>
-            <h2 className="mt-6 text-3xl font-extrabold text-gray-900">Login</h2>
+            <h2 className="mt-6 text-3xl font-bold text-gray-900">Login</h2>
             <p className="mt-2 text-base text-gray-600">
               Portal Mitra & Klien
             </p>
@@ -43,7 +43,7 @@ const Login = () => {
       
       {/* Right side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative">
-        <div className="absolute inset-0 bg-gradient-to-br from-kap-navy/90 to-kap-blue/80"></div>
+        <div className="login-overlay"></div>
         <img 
           src="/lovable-uploads/c783253a-9f5b-40c8-b96a-cf337753932a.png" 
           alt="Professional team meeting" 
