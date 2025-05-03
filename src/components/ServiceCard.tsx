@@ -2,15 +2,46 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Link } from "react-router-dom";
 
 interface ServiceCardProps {
   title: string;
   description: string;
   icon: React.ReactNode;
-  onSelect: () => void;
+  onSelect?: () => void;
+  link?: string;
 }
 
-const ServiceCard = ({ title, description, icon, onSelect }: ServiceCardProps) => {
+const ServiceCard = ({ title, description, icon, onSelect, link }: ServiceCardProps) => {
+  const handleClick = () => {
+    if (onSelect) {
+      onSelect();
+    }
+  };
+
+  const renderButton = () => {
+    if (link) {
+      return (
+        <Link to={link} className="w-full">
+          <Button 
+            className="w-full bg-kap-navy hover:bg-kap-blue text-white"
+          >
+            Lihat Detail
+          </Button>
+        </Link>
+      );
+    }
+    
+    return (
+      <Button 
+        onClick={handleClick} 
+        className="w-full bg-kap-navy hover:bg-kap-blue text-white"
+      >
+        Pilih Layanan Ini
+      </Button>
+    );
+  };
+
   return (
     <Card className="h-full transition-all duration-300 hover:shadow-lg border-gray-200">
       <CardHeader className="pb-4">
@@ -25,12 +56,7 @@ const ServiceCard = ({ title, description, icon, onSelect }: ServiceCardProps) =
         <p className="text-gray-600">{description}</p>
       </CardContent>
       <CardFooter>
-        <Button 
-          onClick={onSelect} 
-          className="w-full bg-kap-navy hover:bg-kap-blue text-white"
-        >
-          Pilih Layanan Ini
-        </Button>
+        {renderButton()}
       </CardFooter>
     </Card>
   );
