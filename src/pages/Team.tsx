@@ -92,7 +92,7 @@ const Team = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <Hero
-        title="Tim KAP Indonesia"
+        title="Tim Kami"
         subtitle="Keahlian dan pengalaman kami menjamin layanan profesional terbaik untuk bisnis Anda"
         image="https://images.unsplash.com/photo-1577962917302-cd874c4e31d2?auto=format&fit=crop&q=80"
         showButton={false}
