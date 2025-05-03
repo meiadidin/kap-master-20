@@ -41,7 +41,7 @@ const LoginForm = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "client"
+    role: "admin"  // Mengubah default menjadi admin
   });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -122,13 +122,14 @@ const LoginForm = () => {
               <SelectValue placeholder="Pilih tipe akun" />
             </SelectTrigger>
             <SelectContent className="z-50">
-              <SelectItem value="managingpartner">Managing Partner</SelectItem>
-              <SelectItem value="partner">Partner</SelectItem>
-              <SelectItem value="admin">Administrator</SelectItem>
-              <SelectItem value="manager">Manajer</SelectItem>
-              <SelectItem value="auditor">Auditor</SelectItem>
+              {/* Mengubah urutan pilihan sesuai permintaan */}
               <SelectItem value="client">Klien</SelectItem>
               <SelectItem value="mitra">Mitra</SelectItem>
+              <SelectItem value="auditor">Auditor</SelectItem>
+              <SelectItem value="manager">Manajer</SelectItem>
+              <SelectItem value="partner">Partner</SelectItem>
+              <SelectItem value="managingpartner">Managing Partner</SelectItem>
+              <SelectItem value="admin">Administrator</SelectItem>
               <SelectItem value="any">Semua Tipe</SelectItem>
             </SelectContent>
           </Select>
