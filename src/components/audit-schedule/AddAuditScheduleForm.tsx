@@ -92,7 +92,7 @@ const priorityOptions = [
   { value: "low", label: "Rendah" },
 ];
 
-// Form schema with Zod validation - Fixed refine method
+// Form schema with Zod validation - Fixed validation method
 const formSchema = z.object({
   client: z.string({
     required_error: "Silakan pilih klien",
@@ -105,15 +105,6 @@ const formSchema = z.object({
   }),
   endDate: z.date({
     required_error: "Silakan pilih tanggal selesai",
-  }).superRefine((endDate, ctx) => {
-    // Get the startDate from the context
-    const startDate = ctx.parent.startDate;
-    if (startDate && endDate < startDate) {
-      ctx.addIssue({
-        code: z.ZodIssueCode.custom,
-        message: "Tanggal selesai harus setelah tanggal mulai",
-      });
-    }
   }),
   team: z.array(z.string()).min(1, {
     message: "Pilih minimal 1 anggota tim",
@@ -125,6 +116,12 @@ const formSchema = z.object({
     required_error: "Silakan pilih prioritas",
   }),
   notes: z.string().optional(),
+}).refine((data) => {
+  // Check if endDate is after startDate
+  return !data.startDate || !data.endDate || data.endDate >= data.startDate;
+}, {
+  message: "Tanggal selesai harus setelah tanggal mulai",
+  path: ["endDate"], // Show error on the endDate field
 });
 
 type FormValues = z.infer<typeof formSchema>;
