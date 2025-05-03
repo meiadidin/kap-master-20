@@ -13,6 +13,21 @@ interface TeamMemberFormProps {
   onClose: () => void;
 }
 
+// Define the skills available for selection
+const skillOptions = [
+  "Audit Keuangan",
+  "Audit Internal",
+  "PPh Badan",
+  "PPN",
+  "Tax Planning",
+  "Perencanaan Pajak",
+  "Transfer Pricing",
+  "Manajemen Risiko",
+  "Due Diligence",
+  "Laporan Keuangan",
+  "Rekonsiliasi"
+];
+
 const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -22,54 +37,139 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
     email: "",
     phone: "",
     experience: "",
-    skills: "",
+    skills: [] as string[],
     image: null as File | null,
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    position: "",
+    email: "",
+    phone: "",
+    experience: "",
+  });
+
   const positions = [
-    "Partner",
     "Managing Partner",
+    "Partner",
     "Senior Manager",
     "Manager",
     "Senior Auditor",
     "Auditor",
+    "Senior Tax Consultant",
+    "Tax Consultant",
+    "Senior Consultant",
+    "Consultant",
+    "Accounting Staff",
     "Staff"
   ];
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    
+    // Clear the error for this field when the user starts typing again
+    setErrors(prev => ({ ...prev, [name]: "" }));
+    
+    // Handle experience as a number
+    if (name === "experience") {
+      // Only allow numbers
+      if (value === "" || /^\d+$/.test(value)) {
+        setFormData(prev => ({ ...prev, [name]: value }));
+      }
+      return;
+    }
+    
+    // Handle phone number input
+    if (name === "phone") {
+      // Only allow numbers and plus sign at the beginning
+      if (value === "" || /^\+?\d*$/.test(value)) {
+        setFormData(prev => ({ ...prev, [name]: value }));
+      }
+      return;
+    }
+    
+    setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSelectChange = (value: string) => {
-    setFormData((prev) => ({ ...prev, position: value }));
+    setErrors(prev => ({ ...prev, position: "" }));
+    setFormData(prev => ({ ...prev, position: value }));
+  };
+
+  const handleSkillToggle = (skill: string) => {
+    setFormData(prev => {
+      const updatedSkills = prev.skills.includes(skill)
+        ? prev.skills.filter(s => s !== skill)
+        : [...prev.skills, skill];
+      
+      return { ...prev, skills: updatedSkills };
+    });
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setFormData((prev) => ({ ...prev, image: e.target.files?.[0] || null }));
+      setFormData(prev => ({ ...prev, image: e.target.files?.[0] || null }));
     }
+  };
+
+  const validateForm = () => {
+    const newErrors = {
+      name: "",
+      position: "",
+      email: "",
+      phone: "",
+      experience: "",
+    };
+    
+    let isValid = true;
+    
+    // Validate required fields
+    if (!formData.name.trim()) {
+      newErrors.name = "Nama lengkap wajib diisi";
+      isValid = false;
+    }
+    
+    if (!formData.position) {
+      newErrors.position = "Posisi wajib dipilih";
+      isValid = false;
+    }
+    
+    if (!formData.email.trim()) {
+      newErrors.email = "Email wajib diisi";
+      isValid = false;
+    } else {
+      // Email validation
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(formData.email)) {
+        newErrors.email = "Format email tidak valid";
+        isValid = false;
+      }
+    }
+    
+    // Phone number validation (optional but must be valid if provided)
+    if (formData.phone && !/^\+?[0-9]{10,15}$/.test(formData.phone)) {
+      newErrors.phone = "Nomor telepon tidak valid (10-15 digit)";
+      isValid = false;
+    }
+    
+    // Experience validation (optional but must be a number if provided)
+    if (formData.experience && !/^\d+$/.test(formData.experience)) {
+      newErrors.experience = "Pengalaman harus berupa angka";
+      isValid = false;
+    }
+    
+    setErrors(newErrors);
+    return isValid;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Basic validation
-    if (!formData.name || !formData.position || !formData.email) {
+    // Validate form
+    if (!validateForm()) {
       toast({
         title: "Form tidak lengkap",
-        description: "Nama, posisi, dan email wajib diisi",
-        variant: "destructive",
-      });
-      return;
-    }
-
-    // Email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      toast({
-        title: "Format email tidak valid",
-        description: "Silakan masukkan alamat email yang valid",
+        description: "Silakan perbaiki kesalahan pada form",
         variant: "destructive",
       });
       return;
@@ -77,15 +177,27 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
     
     setIsSubmitting(true);
     
-    // Simulate API call to /api/team/add
+    // Prepare form data for API
+    const apiData = {
+      ...formData,
+      experience: formData.experience ? parseInt(formData.experience) : 0
+    };
+    
     try {
       // In a real implementation, you would send the form data to the API
+      // const formDataToSend = new FormData();
+      // Object.entries(apiData).forEach(([key, value]) => {
+      //   if (key !== 'image') {
+      //     formDataToSend.append(key, String(value));
+      //   }
+      // });
+      // if (apiData.image) {
+      //   formDataToSend.append('image', apiData.image);
+      // }
+      // 
       // const response = await fetch('/api/team/add', {
       //   method: 'POST',
-      //   body: JSON.stringify(formData),
-      //   headers: {
-      //     'Content-Type': 'application/json'
-      //   }
+      //   body: formDataToSend,
       // });
       // if (!response.ok) throw new Error('Failed to add team member');
       
@@ -104,7 +216,7 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
         email: "",
         phone: "",
         experience: "",
-        skills: "",
+        skills: [],
         image: null,
       });
       onClose();
@@ -144,8 +256,11 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
               value={formData.name}
               onChange={handleInputChange}
               placeholder="Masukkan nama lengkap"
-              required
+              className={errors.name ? "border-red-500" : ""}
             />
+            {errors.name && (
+              <p className="text-sm text-red-500 mt-1">{errors.name}</p>
+            )}
           </div>
           
           {/* Posisi */}
@@ -156,9 +271,8 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
             <Select
               value={formData.position}
               onValueChange={handleSelectChange}
-              required
             >
-              <SelectTrigger id="position" className="w-full">
+              <SelectTrigger id="position" className={`w-full ${errors.position ? "border-red-500" : ""}`}>
                 <SelectValue placeholder="Pilih posisi" />
               </SelectTrigger>
               <SelectContent>
@@ -169,6 +283,9 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
                 ))}
               </SelectContent>
             </Select>
+            {errors.position && (
+              <p className="text-sm text-red-500 mt-1">{errors.position}</p>
+            )}
           </div>
           
           {/* Email */}
@@ -183,8 +300,11 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
               value={formData.email}
               onChange={handleInputChange}
               placeholder="example@email.com"
-              required
+              className={errors.email ? "border-red-500" : ""}
             />
+            {errors.email && (
+              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
+            )}
           </div>
           
           {/* Nomor Telepon */}
@@ -197,38 +317,51 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
               name="phone"
               value={formData.phone}
               onChange={handleInputChange}
-              placeholder="Masukkan nomor telepon"
+              placeholder="Masukkan nomor telepon (contoh: 081234567890)"
+              className={errors.phone ? "border-red-500" : ""}
             />
+            {errors.phone && (
+              <p className="text-sm text-red-500 mt-1">{errors.phone}</p>
+            )}
           </div>
           
           {/* Pengalaman */}
           <div className="space-y-2">
             <Label htmlFor="experience">
-              Pengalaman
+              Pengalaman (tahun)
             </Label>
-            <Textarea
+            <Input
               id="experience"
               name="experience"
               value={formData.experience}
               onChange={handleInputChange}
-              placeholder="Deskripsi pengalaman kerja"
-              className="min-h-[100px]"
+              placeholder="Contoh: 5"
+              className={errors.experience ? "border-red-500" : ""}
             />
+            {errors.experience && (
+              <p className="text-sm text-red-500 mt-1">{errors.experience}</p>
+            )}
           </div>
           
           {/* Keahlian */}
           <div className="space-y-2">
-            <Label htmlFor="skills">
-              Keahlian
-            </Label>
-            <Textarea
-              id="skills"
-              name="skills"
-              value={formData.skills}
-              onChange={handleInputChange}
-              placeholder="Deskripsi keahlian"
-              className="min-h-[100px]"
-            />
+            <Label>Keahlian</Label>
+            <div className="grid grid-cols-2 gap-2">
+              {skillOptions.map((skill) => (
+                <div key={skill} className="flex items-center space-x-2">
+                  <input
+                    type="checkbox"
+                    id={`skill-${skill}`}
+                    checked={formData.skills.includes(skill)}
+                    onChange={() => handleSkillToggle(skill)}
+                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                  />
+                  <Label htmlFor={`skill-${skill}`} className="text-sm">
+                    {skill}
+                  </Label>
+                </div>
+              ))}
+            </div>
           </div>
           
           {/* Upload Foto */}
@@ -259,7 +392,7 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
             </Button>
             <Button
               type="submit"
-              className="bg-kap-navy hover:bg-kap-blue text-white"
+              className="bg-blue-600 hover:bg-blue-700 text-white"
               disabled={isSubmitting}
             >
               {isSubmitting ? "Menyimpan..." : "Simpan"}
