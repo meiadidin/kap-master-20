@@ -1,10 +1,7 @@
-
 import LoginForm from "@/components/LoginForm";
 import { Link } from "react-router-dom";
-
 const Login = () => {
-  return (
-    <div className="login-container">
+  return <div className="login-container">
       {/* Left side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
         <div className="login-card">
@@ -44,15 +41,12 @@ const Login = () => {
       {/* Right side - Image */}
       <div className="hidden lg:block lg:w-1/2 relative">
         <div className="login-overlay"></div>
-        <img 
-          src="/lovable-uploads/c783253a-9f5b-40c8-b96a-cf337753932a.png" 
-          alt="Professional team meeting" 
-          className="w-full h-full object-cover"
-        />
+        <img src="/lovable-uploads/c783253a-9f5b-40c8-b96a-cf337753932a.png" alt="Professional team meeting" className="w-full h-full object-cover" />
         <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12">
           <div className="max-w-lg">
-            <h2 className="text-4xl font-bold mb-6">Selamat Datang di Portal KAP</h2>
-            <p className="text-xl mb-8">
+            <h2 className="font-bold mb-6 text-3xl text-center">Selamat Datang di Portal 
+KAP Gideon Adi & Rekan Surabaya</h2>
+            <p className="text-xl mb-8 text-justify">
               Akses dokumen, laporan audit, dan komunikasi dengan tim kami dengan mudah melalui portal terintegrasi.
             </p>
             <div className="bg-white/10 backdrop-blur-md p-6 rounded-xl border border-white/20">
@@ -72,8 +66,6 @@ const Login = () => {
           </div>
         </div>
       </div>
-    </div>
-  );
+    </div>;
 };
-
 export default Login;
