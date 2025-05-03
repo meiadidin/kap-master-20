@@ -1,17 +1,9 @@
-
 import Hero from "@/components/Hero";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-
 const AboutUs = () => {
-  return (
-    <div className="min-h-screen">
+  return <div className="min-h-screen">
       {/* Hero Section */}
-      <Hero
-        title="Tentang Kami"
-        subtitle="Membangun kepercayaan melalui integritas dan keahlian dalam layanan akuntansi dan keuangan"
-        image="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80"
-        showButton={false}
-      />
+      <Hero title="Tentang Kami" subtitle="Membangun kepercayaan melalui integritas dan keahlian dalam layanan akuntansi dan keuangan" image="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80" showButton={false} />
 
       {/* About Section */}
       <section className="py-16">
@@ -31,26 +23,10 @@ const AboutUs = () => {
             </div>
             <div>
               <div className="grid grid-cols-2 gap-4">
-                <img
-                  src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80"
-                  alt="Kantor Kami"
-                  className="rounded-lg shadow-md h-64 object-cover w-full"
-                />
-                <img
-                  src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80"
-                  alt="Tim Kami"
-                  className="rounded-lg shadow-md h-64 object-cover w-full"
-                />
-                <img
-                  src="https://images.unsplash.com/photo-1573167582108-002d16d9d71e?auto=format&fit=crop&q=80"
-                  alt="Layanan Kami"
-                  className="rounded-lg shadow-md h-64 object-cover w-full"
-                />
-                <img
-                  src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80"
-                  alt="Klien Kami"
-                  className="rounded-lg shadow-md h-64 object-cover w-full"
-                />
+                <img src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80" alt="Kantor Kami" className="rounded-lg shadow-md h-64 object-cover w-full" />
+                <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80" alt="Tim Kami" className="rounded-lg shadow-md h-64 object-cover w-full" />
+                <img src="https://images.unsplash.com/photo-1573167582108-002d16d9d71e?auto=format&fit=crop&q=80" alt="Layanan Kami" className="rounded-lg shadow-md h-64 object-cover w-full" />
+                <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80" alt="Klien Kami" className="rounded-lg shadow-md h-64 object-cover w-full" />
               </div>
             </div>
           </div>
@@ -75,9 +51,7 @@ const AboutUs = () => {
                   </div>
                   <div>
                     <h3 className="text-xl font-semibold text-kap-navy mb-2">Pendirian</h3>
-                    <p className="text-gray-600">
-                      KAP Indonesia didirikan oleh sekelompok akuntan berpengalaman dengan visi memberikan layanan akuntansi profesional yang berkualitas tinggi.
-                    </p>
+                    <p className="text-gray-600">KAP Gideon Adi & Rekan Surabaya didirikan oleh sekelompok akuntan berpengalaman dengan visi memberikan layanan akuntansi profesional yang berkualitas tinggi.</p>
                   </div>
                 </div>
                 <div className="flex">
@@ -166,11 +140,7 @@ const AboutUs = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-64">
-                <img 
-                  src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80" 
-                  alt="Ahmad Santoso" 
-                  className="w-full h-full object-cover"
-                />
+                <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80" alt="Ahmad Santoso" className="w-full h-full object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-kap-navy mb-1">Ahmad Santoso, CPA</h3>
@@ -183,11 +153,7 @@ const AboutUs = () => {
 
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-64">
-                <img 
-                  src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80" 
-                  alt="Siti Rahayu" 
-                  className="w-full h-full object-cover"
-                />
+                <img src="https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?auto=format&fit=crop&q=80" alt="Siti Rahayu" className="w-full h-full object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-kap-navy mb-1">Siti Rahayu, CA</h3>
@@ -200,11 +166,7 @@ const AboutUs = () => {
 
             <div className="bg-white rounded-lg shadow-md overflow-hidden">
               <div className="h-64">
-                <img 
-                  src="https://images.unsplash.com/photo-1556157382-97eda2f9e2bf?auto=format&fit=crop&q=80" 
-                  alt="Budi Wijaya" 
-                  className="w-full h-full object-cover"
-                />
+                <img src="https://images.unsplash.com/photo-1556157382-97eda2f9e2bf?auto=format&fit=crop&q=80" alt="Budi Wijaya" className="w-full h-full object-cover" />
               </div>
               <div className="p-6">
                 <h3 className="text-xl font-semibold text-kap-navy mb-1">Budi Wijaya, MSc</h3>
@@ -241,8 +203,6 @@ const AboutUs = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default AboutUs;
