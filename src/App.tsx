@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -17,6 +18,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import Careers from "./pages/Careers";
 import ServiceOrderPage from "./pages/ServiceOrderPage";
+import AuditSchedule from "./pages/AuditSchedule";
 
 // Service Detail Pages
 import AuditKeuangan from "./pages/services/AuditKeuangan";
@@ -64,6 +66,18 @@ const App = () => (
                 <Navbar />
                 <main className="flex-grow">
                   <ServiceOrderPage />
+                </main>
+                <Footer />
+              </div>
+            } 
+          />
+          <Route 
+            path="/audit-schedule" 
+            element={
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow">
+                  <AuditSchedule />
                 </main>
                 <Footer />
               </div>
