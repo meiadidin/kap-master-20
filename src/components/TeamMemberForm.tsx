@@ -1,11 +1,12 @@
+
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import FormField from "./team/FormField";
+import PositionSelect from "./team/PositionSelect";
+import SkillsSelector from "./team/SkillsSelector";
+import ImageUpload from "./team/ImageUpload";
 
 interface TeamMemberFormProps {
   isOpen: boolean;
@@ -184,23 +185,7 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
     
     try {
       // In a real implementation, you would send the form data to the API
-      // const formDataToSend = new FormData();
-      // Object.entries(apiData).forEach(([key, value]) => {
-      //   if (key !== 'image') {
-      //     formDataToSend.append(key, String(value));
-      //   }
-      // });
-      // if (apiData.image) {
-      //   formDataToSend.append('image', apiData.image);
-      // }
-      // 
-      // const response = await fetch('/api/team/add', {
-      //   method: 'POST',
-      //   body: formDataToSend,
-      // });
-      // if (!response.ok) throw new Error('Failed to add team member');
-      
-      // For now, we'll simulate a successful response after a delay
+      // Simulating a successful response after a delay
       await new Promise(resolve => setTimeout(resolve, 1000));
       
       toast({
@@ -250,140 +235,69 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
         
         <form onSubmit={handleSubmit} className="space-y-6 py-4">
           {/* Nama */}
-          <div className="space-y-2">
-            <Label htmlFor="name">
-              Nama Lengkap <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="name"
-              name="name"
-              value={formData.name}
-              onChange={handleInputChange}
-              placeholder="Masukkan nama lengkap"
-              className={errors.name ? "border-red-500" : ""}
-            />
-            {errors.name && (
-              <p className="text-sm text-red-500 mt-1">{errors.name}</p>
-            )}
-          </div>
+          <FormField
+            id="name"
+            name="name"
+            label="Nama Lengkap"
+            value={formData.name}
+            onChange={handleInputChange}
+            placeholder="Masukkan nama lengkap"
+            required
+            error={errors.name}
+          />
           
           {/* Posisi */}
-          <div className="space-y-2">
-            <Label htmlFor="position">
-              Posisi <span className="text-red-500">*</span>
-            </Label>
-            <Select
-              value={formData.position}
-              onValueChange={handleSelectChange}
-            >
-              <SelectTrigger id="position" className={`w-full ${errors.position ? "border-red-500" : ""}`}>
-                <SelectValue placeholder="Pilih posisi" />
-              </SelectTrigger>
-              <SelectContent>
-                {positions.map((position) => (
-                  <SelectItem key={position} value={position}>
-                    {position}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.position && (
-              <p className="text-sm text-red-500 mt-1">{errors.position}</p>
-            )}
-          </div>
+          <PositionSelect
+            positions={positions}
+            value={formData.position}
+            onChange={handleSelectChange}
+            error={errors.position}
+          />
           
           {/* Email */}
-          <div className="space-y-2">
-            <Label htmlFor="email">
-              Email <span className="text-red-500">*</span>
-            </Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              value={formData.email}
-              onChange={handleInputChange}
-              placeholder="example@email.com"
-              className={errors.email ? "border-red-500" : ""}
-            />
-            {errors.email && (
-              <p className="text-sm text-red-500 mt-1">{errors.email}</p>
-            )}
-          </div>
+          <FormField
+            id="email"
+            name="email"
+            label="Email"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder="example@email.com"
+            type="email"
+            required
+            error={errors.email}
+          />
           
           {/* Nomor Telepon */}
-          <div className="space-y-2">
-            <Label htmlFor="phone">
-              Nomor Telepon
-            </Label>
-            <Input
-              id="phone"
-              name="phone"
-              value={formData.phone}
-              onChange={handleInputChange}
-              placeholder="Masukkan nomor telepon (contoh: 081234567890)"
-              className={errors.phone ? "border-red-500" : ""}
-            />
-            {errors.phone && (
-              <p className="text-sm text-red-500 mt-1">{errors.phone}</p>
-            )}
-          </div>
+          <FormField
+            id="phone"
+            name="phone"
+            label="Nomor Telepon"
+            value={formData.phone}
+            onChange={handleInputChange}
+            placeholder="Masukkan nomor telepon (contoh: 081234567890)"
+            error={errors.phone}
+          />
           
           {/* Pengalaman */}
-          <div className="space-y-2">
-            <Label htmlFor="experience">
-              Pengalaman (tahun)
-            </Label>
-            <Input
-              id="experience"
-              name="experience"
-              value={formData.experience}
-              onChange={handleInputChange}
-              placeholder="Contoh: 5"
-              className={errors.experience ? "border-red-500" : ""}
-            />
-            {errors.experience && (
-              <p className="text-sm text-red-500 mt-1">{errors.experience}</p>
-            )}
-          </div>
+          <FormField
+            id="experience"
+            name="experience"
+            label="Pengalaman (tahun)"
+            value={formData.experience}
+            onChange={handleInputChange}
+            placeholder="Contoh: 5"
+            error={errors.experience}
+          />
           
           {/* Keahlian */}
-          <div className="space-y-2">
-            <Label>Keahlian</Label>
-            <div className="grid grid-cols-2 gap-2">
-              {skillOptions.map((skill) => (
-                <div key={skill} className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    id={`skill-${skill}`}
-                    checked={formData.skills.includes(skill)}
-                    onChange={() => handleSkillToggle(skill)}
-                    className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-                  />
-                  <Label htmlFor={`skill-${skill}`} className="text-sm">
-                    {skill}
-                  </Label>
-                </div>
-              ))}
-            </div>
-          </div>
+          <SkillsSelector 
+            skills={skillOptions}
+            selectedSkills={formData.skills}
+            onToggleSkill={handleSkillToggle}
+          />
           
           {/* Upload Foto */}
-          <div className="space-y-2">
-            <Label htmlFor="image">
-              Foto Profil
-            </Label>
-            <Input
-              id="image"
-              name="image"
-              type="file"
-              onChange={handleFileChange}
-              accept="image/jpeg, image/png"
-            />
-            <p className="text-xs text-gray-500 mt-1">
-              Format yang diterima: JPG atau PNG, ukuran maksimum 2MB
-            </p>
-          </div>
+          <ImageUpload onChange={handleFileChange} />
           
           <DialogFooter className="pt-4">
             <Button
