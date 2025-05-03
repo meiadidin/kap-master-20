@@ -82,13 +82,13 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-start">
                 <MapPin className="mr-2 text-kap-gold flex-shrink-0 mt-1" size={18} />
-                <span className="text-gray-300">
-                  Gedung Menara Kadin Indonesia Lt. 15, Jl. HR. Rasuna Said Blok X-5 Kav. 2-3, Jakarta Selatan 12950
-                </span>
+                <span className="text-gray-300">Gedung The Samator
+SkySuites SOHO lt 17 dan 18 R 06
+Jl. Raya Kedung Baruk 26-28 Surabaya</span>
               </div>
               <div className="flex items-center">
                 <Phone className="mr-2 text-kap-gold flex-shrink-0" size={18} />
-                <span className="text-gray-300">(021) 5274362</span>
+                <span className="text-gray-300">(031) 8788 4594 </span>
               </div>
               <div className="flex items-center">
                 <Mail className="mr-2 text-kap-gold flex-shrink-0" size={18} />
