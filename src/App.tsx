@@ -17,6 +17,20 @@ import NotFound from "./pages/NotFound";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 
+// Service Detail Pages
+import AuditKeuangan from "./pages/services/AuditKeuangan";
+import ReviewKeuangan from "./pages/services/ReviewKeuangan";
+import AuditKepatuhan from "./pages/services/AuditKepatuhan";
+import PerencanaanPajak from "./pages/services/PerencanaanPajak";
+import KepatuhanPajak from "./pages/services/KepatuhanPajak";
+import KonsultasiPerpajakan from "./pages/services/KonsultasiPerpajakan";
+import PenyusunanLaporan from "./pages/services/PenyusunanLaporan";
+import PembukuanAkuntansi from "./pages/services/PembukuanAkuntansi";
+import KonsultasiSistem from "./pages/services/KonsultasiSistem";
+import DueDiligence from "./pages/services/DueDiligence";
+import Restrukturisasi from "./pages/services/Restrukturisasi";
+import ManajemenRisiko from "./pages/services/ManajemenRisiko";
+
 const queryClient = new QueryClient();
 
 const App = () => (
@@ -54,6 +68,21 @@ const App = () => (
                     <Route path="/layanan" element={<Services />} />
                     <Route path="/tim-kami" element={<Team />} />
                     <Route path="/kontak" element={<Contact />} />
+                    
+                    {/* Service Detail Routes */}
+                    <Route path="/layanan/audit-keuangan" element={<AuditKeuangan />} />
+                    <Route path="/layanan/review-keuangan" element={<ReviewKeuangan />} />
+                    <Route path="/layanan/audit-kepatuhan" element={<AuditKepatuhan />} />
+                    <Route path="/layanan/perencanaan-pajak" element={<PerencanaanPajak />} />
+                    <Route path="/layanan/kepatuhan-pajak" element={<KepatuhanPajak />} />
+                    <Route path="/layanan/konsultasi-perpajakan" element={<KonsultasiPerpajakan />} />
+                    <Route path="/layanan/penyusunan-laporan" element={<PenyusunanLaporan />} />
+                    <Route path="/layanan/pembukuan-akuntansi" element={<PembukuanAkuntansi />} />
+                    <Route path="/layanan/konsultasi-sistem" element={<KonsultasiSistem />} />
+                    <Route path="/layanan/due-diligence" element={<DueDiligence />} />
+                    <Route path="/layanan/restrukturisasi" element={<Restrukturisasi />} />
+                    <Route path="/layanan/manajemen-risiko" element={<ManajemenRisiko />} />
+                    
                     <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
