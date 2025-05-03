@@ -66,12 +66,16 @@ const Team = () => {
   ];
 
   const handleOpenForm = () => {
+    console.log("Opening form...");
     setIsFormOpen(true);
   };
 
   const handleCloseForm = () => {
+    console.log("Closing form...");
     setIsFormOpen(false);
   };
+
+  console.log("Is form open:", isFormOpen);
 
   return (
     <div className="min-h-screen">
@@ -96,6 +100,7 @@ const Team = () => {
             {canAddMembers && (
               <div className="flex justify-center md:justify-end">
                 <Button
+                  id="tambahAnggotaBtn"
                   className="bg-blue-600 hover:bg-blue-700 text-white flex items-center gap-2 px-6 py-5 h-auto rounded-md"
                   onClick={handleOpenForm}
                 >

@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
@@ -231,8 +230,13 @@ const TeamMemberForm = ({ isOpen, onClose }: TeamMemberFormProps) => {
     }
   };
 
+  // Console log for debugging
+  console.log("TeamMemberForm isOpen:", isOpen);
+
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
+    <Dialog open={isOpen} onOpenChange={(open) => {
+      if (!open) onClose();
+    }}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-kap-navy">
