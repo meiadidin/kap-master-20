@@ -1,105 +1,77 @@
-
 import Hero from "@/components/Hero";
 import ServiceCard from "@/components/ServiceCard";
 import { BookOpen, FileText, Search, Users, Calendar, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Link } from "react-router-dom";
-
 const Services = () => {
-  const auditServices = [
-    {
-      title: "Audit Keuangan",
-      description: "Audit independen atas laporan keuangan untuk memastikan kepatuhan terhadap standar akuntansi yang berlaku.",
-      icon: <BookOpen size={24} />,
-      link: "/layanan/audit-keuangan"
-    },
-    {
-      title: "Review Keuangan",
-      description: "Prosedur analitis dan inquiries untuk memberikan tingkat keyakinan terbatas atas laporan keuangan.",
-      icon: <Search size={24} />,
-      link: "/layanan/review-keuangan"
-    },
-    {
-      title: "Audit Kepatuhan",
-      description: "Evaluasi kepatuhan entitas terhadap persyaratan, regulasi, atau ketentuan tertentu.",
-      icon: <FileText size={24} />,
-      link: "/layanan/audit-kepatuhan"
-    }
-  ];
-
-  const taxServices = [
-    {
-      title: "Perencanaan Pajak",
-      description: "Strategi perpajakan untuk mengoptimalkan posisi pajak perusahaan dalam kerangka peraturan yang berlaku.",
-      icon: <Calendar size={24} />,
-      link: "/layanan/perencanaan-pajak"
-    },
-    {
-      title: "Kepatuhan Pajak",
-      description: "Penyusunan dan pelaporan SPT Tahunan dan Bulanan untuk memastikan kepatuhan terhadap kewajiban perpajakan.",
-      icon: <FileText size={24} />,
-      link: "/layanan/kepatuhan-pajak"
-    },
-    {
-      title: "Konsultasi Perpajakan",
-      description: "Saran dan pendampingan dalam menangani masalah perpajakan kompleks dan sengketa pajak.",
-      icon: <Info size={24} />,
-      link: "/layanan/konsultasi-perpajakan"
-    }
-  ];
-
-  const accountingServices = [
-    {
-      title: "Penyusunan Laporan Keuangan",
-      description: "Penyusunan laporan keuangan sesuai dengan standar akuntansi yang berlaku di Indonesia.",
-      icon: <FileText size={24} />,
-      link: "/layanan/penyusunan-laporan"
-    },
-    {
-      title: "Pembukuan & Akuntansi",
-      description: "Pengelolaan pembukuan dan pencatatan transaksi keuangan secara akurat dan tepat waktu.",
-      icon: <BookOpen size={24} />,
-      link: "/layanan/pembukuan-akuntansi"
-    },
-    {
-      title: "Konsultasi Sistem Akuntansi",
-      description: "Pengembangan dan implementasi sistem akuntansi yang efektif dan sesuai kebutuhan bisnis.",
-      icon: <Search size={24} />,
-      link: "/layanan/konsultasi-sistem"
-    }
-  ];
-
-  const advisoryServices = [
-    {
-      title: "Due Diligence",
-      description: "Investigasi menyeluruh atas aspek keuangan dan operasional perusahaan target dalam proses akuisisi atau merger.",
-      icon: <Search size={24} />,
-      link: "/layanan/due-diligence"
-    },
-    {
-      title: "Restrukturisasi Perusahaan",
-      description: "Strategi dan implementasi perubahan struktur perusahaan untuk meningkatkan efisiensi dan nilai.",
-      icon: <Users size={24} />,
-      link: "/layanan/restrukturisasi"
-    },
-    {
-      title: "Manajemen Risiko",
-      description: "Identifikasi, analisis, dan mitigasi risiko bisnis untuk memastikan keberlanjutan operasional.",
-      icon: <Info size={24} />,
-      link: "/layanan/manajemen-risiko"
-    }
-  ];
-
-  return (
-    <div className="min-h-screen">
+  const auditServices = [{
+    title: "Audit Keuangan",
+    description: "Audit independen atas laporan keuangan untuk memastikan kepatuhan terhadap standar akuntansi yang berlaku.",
+    icon: <BookOpen size={24} />,
+    link: "/layanan/audit-keuangan"
+  }, {
+    title: "Review Keuangan",
+    description: "Prosedur analitis dan inquiries untuk memberikan tingkat keyakinan terbatas atas laporan keuangan.",
+    icon: <Search size={24} />,
+    link: "/layanan/review-keuangan"
+  }, {
+    title: "Audit Kepatuhan",
+    description: "Evaluasi kepatuhan entitas terhadap persyaratan, regulasi, atau ketentuan tertentu.",
+    icon: <FileText size={24} />,
+    link: "/layanan/audit-kepatuhan"
+  }];
+  const taxServices = [{
+    title: "Perencanaan Pajak",
+    description: "Strategi perpajakan untuk mengoptimalkan posisi pajak perusahaan dalam kerangka peraturan yang berlaku.",
+    icon: <Calendar size={24} />,
+    link: "/layanan/perencanaan-pajak"
+  }, {
+    title: "Kepatuhan Pajak",
+    description: "Penyusunan dan pelaporan SPT Tahunan dan Bulanan untuk memastikan kepatuhan terhadap kewajiban perpajakan.",
+    icon: <FileText size={24} />,
+    link: "/layanan/kepatuhan-pajak"
+  }, {
+    title: "Konsultasi Perpajakan",
+    description: "Saran dan pendampingan dalam menangani masalah perpajakan kompleks dan sengketa pajak.",
+    icon: <Info size={24} />,
+    link: "/layanan/konsultasi-perpajakan"
+  }];
+  const accountingServices = [{
+    title: "Penyusunan Laporan Keuangan",
+    description: "Penyusunan laporan keuangan sesuai dengan standar akuntansi yang berlaku di Indonesia.",
+    icon: <FileText size={24} />,
+    link: "/layanan/penyusunan-laporan"
+  }, {
+    title: "Pembukuan & Akuntansi",
+    description: "Pengelolaan pembukuan dan pencatatan transaksi keuangan secara akurat dan tepat waktu.",
+    icon: <BookOpen size={24} />,
+    link: "/layanan/pembukuan-akuntansi"
+  }, {
+    title: "Konsultasi Sistem Akuntansi",
+    description: "Pengembangan dan implementasi sistem akuntansi yang efektif dan sesuai kebutuhan bisnis.",
+    icon: <Search size={24} />,
+    link: "/layanan/konsultasi-sistem"
+  }];
+  const advisoryServices = [{
+    title: "Due Diligence",
+    description: "Investigasi menyeluruh atas aspek keuangan dan operasional perusahaan target dalam proses akuisisi atau merger.",
+    icon: <Search size={24} />,
+    link: "/layanan/due-diligence"
+  }, {
+    title: "Restrukturisasi Perusahaan",
+    description: "Strategi dan implementasi perubahan struktur perusahaan untuk meningkatkan efisiensi dan nilai.",
+    icon: <Users size={24} />,
+    link: "/layanan/restrukturisasi"
+  }, {
+    title: "Manajemen Risiko",
+    description: "Identifikasi, analisis, dan mitigasi risiko bisnis untuk memastikan keberlanjutan operasional.",
+    icon: <Info size={24} />,
+    link: "/layanan/manajemen-risiko"
+  }];
+  return <div className="min-h-screen">
       {/* Hero Section */}
-      <Hero
-        title="Layanan Kami"
-        subtitle="Solusi akuntansi dan keuangan komprehensif untuk mendukung pertumbuhan dan kepatuhan bisnis Anda"
-        image="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&q=80"
-        showButton={false}
-      />
+      <Hero title="Layanan Kami" subtitle="Solusi akuntansi dan keuangan komprehensif untuk mendukung pertumbuhan dan kepatuhan bisnis Anda" image="https://images.unsplash.com/photo-1521737852567-6949f3f9f2b5?auto=format&fit=crop&q=80" showButton={false} />
 
       {/* Services Introduction */}
       <section className="py-16">
@@ -120,15 +92,7 @@ const Services = () => {
             </TabsList>
             <TabsContent value="audit" className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {auditServices.map((service, index) => (
-                  <ServiceCard
-                    key={index}
-                    title={service.title}
-                    description={service.description}
-                    icon={service.icon}
-                    link={service.link}
-                  />
-                ))}
+                {auditServices.map((service, index) => <ServiceCard key={index} title={service.title} description={service.description} icon={service.icon} link={service.link} />)}
               </div>
               <div className="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h3 className="text-xl font-semibold text-kap-navy mb-4">Mengapa Memilih Layanan Audit Kami?</h3>
@@ -142,15 +106,7 @@ const Services = () => {
             </TabsContent>
             <TabsContent value="tax" className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {taxServices.map((service, index) => (
-                  <ServiceCard
-                    key={index}
-                    title={service.title}
-                    description={service.description}
-                    icon={service.icon}
-                    link={service.link}
-                  />
-                ))}
+                {taxServices.map((service, index) => <ServiceCard key={index} title={service.title} description={service.description} icon={service.icon} link={service.link} />)}
               </div>
               <div className="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h3 className="text-xl font-semibold text-kap-navy mb-4">Keunggulan Layanan Pajak Kami</h3>
@@ -164,15 +120,7 @@ const Services = () => {
             </TabsContent>
             <TabsContent value="accounting" className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {accountingServices.map((service, index) => (
-                  <ServiceCard
-                    key={index}
-                    title={service.title}
-                    description={service.description}
-                    icon={service.icon}
-                    link={service.link}
-                  />
-                ))}
+                {accountingServices.map((service, index) => <ServiceCard key={index} title={service.title} description={service.description} icon={service.icon} link={service.link} />)}
               </div>
               <div className="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h3 className="text-xl font-semibold text-kap-navy mb-4">Manfaat Layanan Akuntansi Kami</h3>
@@ -186,15 +134,7 @@ const Services = () => {
             </TabsContent>
             <TabsContent value="advisory" className="pt-4">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {advisoryServices.map((service, index) => (
-                  <ServiceCard
-                    key={index}
-                    title={service.title}
-                    description={service.description}
-                    icon={service.icon}
-                    link={service.link}
-                  />
-                ))}
+                {advisoryServices.map((service, index) => <ServiceCard key={index} title={service.title} description={service.description} icon={service.icon} link={service.link} />)}
               </div>
               <div className="mt-8 bg-gray-50 p-6 rounded-lg border border-gray-100">
                 <h3 className="text-xl font-semibold text-kap-navy mb-4">Nilai Tambah Layanan Advisory</h3>
@@ -221,7 +161,7 @@ const Services = () => {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="bg-white p-6 rounded-lg shadow-md text-center">
+            <div className="p-6 rounded-lg shadow-md text-center bg-zinc-50">
               <h3 className="text-lg font-semibold text-kap-navy mb-2">Perbankan & Jasa Keuangan</h3>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-md text-center">
@@ -272,8 +212,6 @@ const Services = () => {
           </div>
         </div>
       </section>
-    </div>
-  );
+    </div>;
 };
-
 export default Services;
