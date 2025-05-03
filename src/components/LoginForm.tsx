@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -249,7 +250,7 @@ const LoginForm = () => {
         </Link>
       </div>
       <div className="text-center text-sm text-gray-600">
-        <p>Belum memiliki akun? Pesan layanan profesional baru sekarang.</p>
+        <p>Pesan layanan profesional baru sekarang.</p>
       </div>
     </div>
   );
