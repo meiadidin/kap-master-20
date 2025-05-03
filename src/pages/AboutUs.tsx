@@ -7,7 +7,7 @@ const AboutUs = () => {
     <div className="min-h-screen">
       {/* Hero Section */}
       <Hero
-        title="Tentang KAP Indonesia"
+        title="Tentang Kami"
         subtitle="Membangun kepercayaan melalui integritas dan keahlian dalam layanan akuntansi dan keuangan"
         image="https://images.unsplash.com/photo-1560179707-f14e90ef3623?auto=format&fit=crop&q=80"
         showButton={false}
@@ -20,7 +20,7 @@ const AboutUs = () => {
             <div>
               <h2 className="text-3xl font-bold text-kap-navy mb-6">Komitmen Kami</h2>
               <p className="text-gray-600 mb-4">
-                KAP Indonesia didirikan dengan visi menjadi kantor akuntan publik terdepan yang memberikan layanan akuntansi dan keuangan berkualitas tinggi dengan integritas dan profesionalisme.
+                Kami didirikan dengan visi menjadi kantor akuntan publik terdepan yang memberikan layanan akuntansi dan keuangan berkualitas tinggi dengan integritas dan profesionalisme.
               </p>
               <p className="text-gray-600 mb-4">
                 Kami berkomitmen untuk memberikan solusi yang tepat dan efektif bagi setiap klien, dengan memahami kebutuhan spesifik mereka dan menghadirkan pendekatan yang disesuaikan.
@@ -33,22 +33,22 @@ const AboutUs = () => {
               <div className="grid grid-cols-2 gap-4">
                 <img
                   src="https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80"
-                  alt="Kantor KAP Indonesia"
+                  alt="Kantor Kami"
                   className="rounded-lg shadow-md h-64 object-cover w-full"
                 />
                 <img
                   src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?auto=format&fit=crop&q=80"
-                  alt="Tim KAP Indonesia"
+                  alt="Tim Kami"
                   className="rounded-lg shadow-md h-64 object-cover w-full"
                 />
                 <img
                   src="https://images.unsplash.com/photo-1573167582108-002d16d9d71e?auto=format&fit=crop&q=80"
-                  alt="Layanan KAP Indonesia"
+                  alt="Layanan Kami"
                   className="rounded-lg shadow-md h-64 object-cover w-full"
                 />
                 <img
                   src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80"
-                  alt="Klien KAP Indonesia"
+                  alt="Klien Kami"
                   className="rounded-lg shadow-md h-64 object-cover w-full"
                 />
               </div>
