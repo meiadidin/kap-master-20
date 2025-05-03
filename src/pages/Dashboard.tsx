@@ -1,16 +1,9 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate, Routes, Route } from "react-router-dom";
-import { BarChart, Briefcase, Building, ChevronDown, Clipboard, FileText, Home, LogOut, Minus, Plus, Settings, User, Users } from "lucide-react";
+import { BarChart, Briefcase, Building, Clipboard, FileText, Home, LogOut, Minus, Plus, Settings, User, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 
 import ClientsList from "@/components/dashboard/ClientsList";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
@@ -202,37 +195,8 @@ const Dashboard = () => {
           isMenuCollapsed ? "ml-16" : "ml-64"
         }`}
       >
-        {/* Header */}
-        <header className="bg-white shadow-sm py-4 px-6 flex justify-between items-center">
-          <h1 className="text-xl font-semibold text-gray-800">
-            Dashboard
-          </h1>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" className="flex items-center">
-                <User className="mr-2" size={18} />
-                <span>{currentUser.name}</span>
-                <ChevronDown size={16} className="ml-2" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-56">
-              <DropdownMenuItem onClick={() => navigate('/dashboard/profile')}>
-                <User className="mr-2" size={16} />
-                <span>Profil</span>
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => navigate('/dashboard/settings')}>
-                <Settings className="mr-2" size={16} />
-                <span>Pengaturan</span>
-              </DropdownMenuItem>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout} className="text-red-600">
-                <LogOut className="mr-2" size={16} />
-                <span>Keluar</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </header>
-
+        {/* Hapus header yang berisi teks "Dashboard" dan button dengan nama pengguna */}
+        
         {/* Content */}
         <div className="p-6">
           <Routes>
