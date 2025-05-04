@@ -84,7 +84,7 @@ const Dashboard = () => {
         path: "/dashboard/documents"
       }, {
         icon: MessageCircle,
-        label: "Media Kolaborasi",
+        label: "Kolaborasi",
         path: "/dashboard/collaboration"
       }, {
         icon: User,
@@ -117,7 +117,7 @@ const Dashboard = () => {
         path: "/dashboard/documents"
       }, {
         icon: MessageCircle,
-        label: "Media Kolaborasi",
+        label: "Kolaborasi",
         path: "/dashboard/collaboration"
       }, {
         icon: User,
@@ -138,7 +138,7 @@ const Dashboard = () => {
         path: "/dashboard/documents"
       }, {
         icon: MessageCircle,
-        label: "Media Kolaborasi",
+        label: "Kolaborasi",
         path: "/dashboard/collaboration"
       }, {
         icon: Users,
@@ -162,7 +162,7 @@ const Dashboard = () => {
       path: "/dashboard/documents"
     }, {
       icon: MessageCircle,
-      label: "Media Kolaborasi",
+      label: "Kolaborasi",
       path: "/dashboard/collaboration"
     }, {
       icon: User,
