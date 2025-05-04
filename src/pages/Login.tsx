@@ -42,7 +42,7 @@ const Login = () => {
       <div className="hidden lg:block lg:w-1/2 relative">
         <div className="login-overlay"></div>
         <img src="/lovable-uploads/c783253a-9f5b-40c8-b96a-cf337753932a.png" alt="Professional team meeting" className="w-full h-full object-cover" />
-        <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12">
+        <div className="absolute inset-0 flex flex-col justify-center items-center text-white p-12 bg-sky-700">
           <div className="max-w-lg">
             <h2 className="font-bold mb-6 text-center text-3xl my-[13px] mx-[14px]">Selamat Datang di Portal KAP Gideon Adi & Rekan Surabaya</h2>
             <p className="text-xl mb-8 text-justify">
