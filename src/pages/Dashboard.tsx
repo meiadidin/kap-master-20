@@ -182,8 +182,8 @@ const Dashboard = () => {
           {/* Logo */}
           <div className="p-4 border-b border-blue-800 flex justify-between items-center">
             {!isMenuCollapsed && <div className="flex flex-col">
-                <span className="font-bold text-lg truncate">MGI Gideon Adi</span>
-                <span className="text-xs text-gray-300">& Rekan SURABAYA</span>
+                <span className="font-bold text-lg truncate text-center">MGI Gideon Adi & Rekan</span>
+                <span className="text-gray-300 text-center text-xs font-bold">SURABAYA</span>
               </div>}
             <Button variant="ghost" size="icon" className="text-white hover:bg-blue-800" onClick={() => setIsMenuCollapsed(!isMenuCollapsed)}>
               {isMenuCollapsed ? <Plus size={18} /> : <Minus size={18} />}
