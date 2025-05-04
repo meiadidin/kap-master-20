@@ -182,8 +182,8 @@ const Dashboard = () => {
           {/* Logo */}
           <div className="p-4 border-b border-blue-800 flex justify-between items-center">
             {!isMenuCollapsed && <div className="flex flex-col">
-                <span className="font-bold text-lg truncate text-center">MGI Gideon Adi & Rekan</span>
-                <span className="text-gray-300 text-center text-xs font-bold">SURABAYA</span>
+                <span className="font-bold text-lg truncate">MGI Gideon Adi</span>
+                <span className="text-xs text-gray-300">& Rekan SURABAYA</span>
               </div>}
             <Button variant="ghost" size="icon" className="text-white hover:bg-blue-800" onClick={() => setIsMenuCollapsed(!isMenuCollapsed)}>
               {isMenuCollapsed ? <Plus size={18} /> : <Minus size={18} />}
@@ -218,7 +218,7 @@ const Dashboard = () => {
           </nav>
 
           {/* Logout Button */}
-          <div className="p-4 border-t border-blue-800 bg-sky-600">
+          <div className="p-4 border-t border-blue-800">
             <Button variant="ghost" className="w-full justify-start text-white hover:bg-blue-800" onClick={handleLogout}>
               <LogOut size={20} />
               {!isMenuCollapsed && <span className="ml-3">Keluar</span>}
