@@ -19,7 +19,8 @@ import Footer from "./components/Footer";
 import Careers from "./pages/Careers";
 import ServiceOrderPage from "./pages/ServiceOrderPage";
 import AuditSchedule from "./pages/AuditSchedule";
-import Collaboration from "./pages/Collaboration"; // Tambahkan import
+import Collaboration from "./pages/Collaboration"; 
+import TeamManagement from "./pages/TeamManagement"; // Add import for TeamManagement
 
 // Service Detail Pages
 import AuditKeuangan from "./pages/services/AuditKeuangan";
@@ -79,6 +80,18 @@ const App = () => (
                 <Navbar />
                 <main className="flex-grow">
                   <AuditSchedule />
+                </main>
+                <Footer />
+              </div>
+            } 
+          />
+          <Route 
+            path="/team-management" 
+            element={
+              <div className="flex flex-col min-h-screen">
+                <Navbar />
+                <main className="flex-grow">
+                  <TeamManagement />
                 </main>
                 <Footer />
               </div>
