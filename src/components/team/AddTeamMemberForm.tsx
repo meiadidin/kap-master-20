@@ -9,79 +9,15 @@ import {
   DialogTitle, 
   DialogFooter 
 } from "@/components/ui/dialog";
-import { 
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage
-} from "@/components/ui/form";
+import { Form } from "@/components/ui/form";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue
-} from "@/components/ui/select";
-import { Checkbox } from "@/components/ui/checkbox";
-
-// Define available positions
-const positions = [
-  "Managing Partner",
-  "Partner",
-  "Senior Advisor",
-  "Managing Digital",
-  "Senior Manager",
-  "Manager",
-  "Senior Auditor",
-  "Junior Auditor",
-  "Senior Tax Consultant",
-  "Tax Consultant",
-  "Senior Consultant",
-  "Consultant",
-  "Accounting Staff"
-];
-
-// Define available competencies
-const competencies = [
-  { id: "audit-keuangan", label: "Audit Keuangan" },
-  { id: "audit-internal", label: "Audit Internal" },
-  { id: "pph-badan", label: "PPh Badan" },
-  { id: "pph-baker", label: "PPh Baker" },
-  { id: "ppn", label: "PPN" },
-  { id: "tax-planning", label: "Tax Planning" },
-  { id: "perencanaan-pajak", label: "Perencanaan Pajak" },
-  { id: "percussion-pajak", label: "Percussion Pajak" },
-  { id: "transfer-pricing", label: "Transfer Pricing" },
-  { id: "manajemen-risiko", label: "Manajemen Risiko" },
-  { id: "due-diligence", label: "Due Diligence" },
-  { id: "laporan-keuangan", label: "Laporan Keuangan" },
-  { id: "rekonsiliasi", label: "Rekonsiliasi" }
-];
-
-// Define form schema using zod for validation
-const formSchema = z.object({
-  name: z.string().min(1, { message: "Nama lengkap wajib diisi" }),
-  email: z.string().email({ message: "Format email tidak valid" }),
-  phone: z.string()
-    .min(10, { message: "Nomor telepon minimal 10 digit" })
-    .max(15, { message: "Nomor telepon maksimal 15 digit" })
-    .regex(/^\d+$/, { message: "Nomor telepon hanya boleh berisi angka" }),
-  position: z.string({ required_error: "Posisi wajib dipilih" }),
-  experience: z.string()
-    .min(1, { message: "Pengalaman wajib diisi" })
-    .regex(/^\d+$/, { message: "Pengalaman harus berupa angka" }),
-  competencies: z.array(z.string())
-    .min(1, { message: "Pilih minimal 1 kompetensi" })
-});
-
-type FormValues = z.infer<typeof formSchema>;
+import { usePermissions } from "./hooks/usePermissions";
+import { formSchema, FormValues } from "./schema/teamMemberSchema";
+import BasicInfoFields from "./form-fields/BasicInfoFields";
+import ProfessionalInfoFields from "./form-fields/ProfessionalInfoFields";
+import CompetenciesField from "./form-fields/CompetenciesField";
 
 interface AddTeamMemberFormProps {
   isOpen: boolean;
@@ -92,6 +28,7 @@ interface AddTeamMemberFormProps {
 const AddTeamMemberForm = ({ isOpen, onClose, onSubmit }: AddTeamMemberFormProps) => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { canAddTeamMember } = usePermissions();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
@@ -104,10 +41,6 @@ const AddTeamMemberForm = ({ isOpen, onClose, onSubmit }: AddTeamMemberFormProps
       competencies: []
     }
   });
-
-  // Check user permissions
-  const currentUser = JSON.parse(sessionStorage.getItem('currentUser') || '{}');
-  const canAddTeamMember = ['managingpartner', 'partner'].includes(currentUser.role || '');
 
   const handleSubmit = async (values: FormValues) => {
     if (!canAddTeamMember) {
@@ -128,9 +61,10 @@ const AddTeamMemberForm = ({ isOpen, onClose, onSubmit }: AddTeamMemberFormProps
       // Format data before submitting
       const formattedData = {
         ...values,
-        skills: values.competencies.map(id => 
-          competencies.find(comp => comp.id === id)?.label || ""
-        ).filter(label => label !== "")
+        skills: values.competencies.map(id => {
+          const comp = competencies.find(comp => comp.id === id);
+          return comp ? comp.label : "";
+        }).filter(label => label !== "")
       };
       
       onSubmit(formattedData);
@@ -165,176 +99,16 @@ const AddTeamMemberForm = ({ isOpen, onClose, onSubmit }: AddTeamMemberFormProps
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-6 py-4">
-            {/* Nama Lengkap */}
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nama Lengkap</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Masukkan nama lengkap" 
-                      {...field} 
-                      disabled={!canAddTeamMember || isSubmitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Email */}
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="contoh@email.com" 
-                      type="email" 
-                      {...field} 
-                      disabled={!canAddTeamMember || isSubmitting}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Nomor Telepon */}
-            <FormField
-              control={form.control}
-              name="phone"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Nomor Telepon</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="08123456789" 
-                      {...field} 
-                      disabled={!canAddTeamMember || isSubmitting}
-                      maxLength={15}
-                      onChange={(e) => {
-                        // Only allow numbers
-                        const value = e.target.value.replace(/\D/g, '');
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Posisi/Role */}
-            <FormField
-              control={form.control}
-              name="position"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Posisi/Role</FormLabel>
-                  <Select 
-                    onValueChange={field.onChange} 
-                    defaultValue={field.value}
-                    disabled={!canAddTeamMember || isSubmitting}
-                  >
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Pilih posisi" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {positions.map((position) => (
-                        <SelectItem key={position} value={position}>
-                          {position}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Pengalaman */}
-            <FormField
-              control={form.control}
-              name="experience"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Pengalaman (tahun)</FormLabel>
-                  <FormControl>
-                    <Input 
-                      placeholder="Contoh: 5" 
-                      {...field} 
-                      disabled={!canAddTeamMember || isSubmitting}
-                      onChange={(e) => {
-                        // Only allow numbers
-                        const value = e.target.value.replace(/\D/g, '');
-                        field.onChange(value);
-                      }}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Kompetensi */}
-            <FormField
-              control={form.control}
-              name="competencies"
-              render={() => (
-                <FormItem>
-                  <div className="mb-4">
-                    <FormLabel className="text-base">Kompetensi</FormLabel>
-                    <p className="text-sm text-muted-foreground">
-                      Pilih kompetensi yang dikuasai
-                    </p>
-                  </div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {competencies.map((competency) => (
-                      <FormField
-                        key={competency.id}
-                        control={form.control}
-                        name="competencies"
-                        render={({ field }) => {
-                          return (
-                            <FormItem
-                              key={competency.id}
-                              className="flex flex-row items-start space-x-3 space-y-0"
-                            >
-                              <FormControl>
-                                <Checkbox
-                                  disabled={!canAddTeamMember || isSubmitting}
-                                  checked={field.value?.includes(competency.id)}
-                                  onCheckedChange={(checked) => {
-                                    return checked
-                                      ? field.onChange([...field.value, competency.id])
-                                      : field.onChange(
-                                          field.value?.filter(
-                                            (value) => value !== competency.id
-                                          )
-                                        )
-                                  }}
-                                />
-                              </FormControl>
-                              <FormLabel className="font-normal">
-                                {competency.label}
-                              </FormLabel>
-                            </FormItem>
-                          )
-                        }}
-                      />
-                    ))}
-                  </div>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="space-y-6">
+              {/* Basic Information */}
+              <BasicInfoFields form={form} disabled={!canAddTeamMember || isSubmitting} />
+              
+              {/* Professional Information */}
+              <ProfessionalInfoFields form={form} disabled={!canAddTeamMember || isSubmitting} />
+              
+              {/* Competencies */}
+              <CompetenciesField form={form} disabled={!canAddTeamMember || isSubmitting} />
+            </div>
 
             <DialogFooter>
               <Button
@@ -361,3 +135,6 @@ const AddTeamMemberForm = ({ isOpen, onClose, onSubmit }: AddTeamMemberFormProps
 };
 
 export default AddTeamMemberForm;
+
+// Import competencies for the formatting logic
+import { competencies } from "./schema/teamMemberSchema";
