@@ -2,8 +2,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User, MessageSquare, Bell } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
+import { Menu, X, User } from "lucide-react";
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -40,12 +39,6 @@ const Navbar = () => {
             <Link to="/tim-kami" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat">
               Tim Kami
             </Link>
-            <Link to="/kolaborasi" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat flex items-center">
-              Kolaborasi
-              <Badge className="bg-green-500 ml-1.5 h-5 w-5 flex items-center justify-center p-0 rounded-full">
-                2
-              </Badge>
-            </Link>
             <Link to="/kontak" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat">
               Kontak
             </Link>
@@ -80,12 +73,6 @@ const Navbar = () => {
               </Link>
               <Link to="/tim-kami" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat" onClick={toggleMenu}>
                 Tim Kami
-              </Link>
-              <Link to="/kolaborasi" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat flex items-center" onClick={toggleMenu}>
-                Kolaborasi
-                <Badge className="bg-green-500 ml-1.5 h-5 w-5 flex items-center justify-center p-0 rounded-full">
-                  2
-                </Badge>
               </Link>
               <Link to="/kontak" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat" onClick={toggleMenu}>
                 Kontak
