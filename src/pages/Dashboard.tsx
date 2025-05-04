@@ -218,7 +218,7 @@ const Dashboard = () => {
           </nav>
 
           {/* Logout Button */}
-          <div className="p-4 border-t border-blue-800">
+          <div className="p-4 border-t border-blue-800 bg-sky-600">
             <Button variant="ghost" className="w-full justify-start text-white hover:bg-blue-800" onClick={handleLogout}>
               <LogOut size={20} />
               {!isMenuCollapsed && <span className="ml-3">Keluar</span>}
