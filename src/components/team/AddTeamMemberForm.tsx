@@ -86,7 +86,7 @@ type FormValues = z.infer<typeof formSchema>;
 interface AddTeamMemberFormProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (data: FormValues) => void;
+  onSubmit: (data: any) => void;
 }
 
 const AddTeamMemberForm = ({ isOpen, onClose, onSubmit }: AddTeamMemberFormProps) => {
