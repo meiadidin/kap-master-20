@@ -47,7 +47,7 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
     },
     {
       icon: <MessageCircle size={20} />,
-      label: "Media Kolaborasi",
+      label: "Kolaborasi",
       path: "/dashboard/collaboration",
       showFor: ['admin', 'manager', 'auditor', 'partner', 'managingpartner', 'client', 'mitra'],
     },

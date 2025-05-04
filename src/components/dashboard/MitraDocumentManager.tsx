@@ -3,7 +3,7 @@ import { useState } from "react";
 import MitraOverview from "./mitra/MitraOverview";
 import DocumentManager from "./mitra/DocumentManager";
 import ClientsList from "./ClientsList";
-import { LayoutDashboard, FileText, User, Settings, Users } from "lucide-react";
+import { LayoutDashboard, FileText, User, Settings, Users, MessageCircle } from "lucide-react";
 
 type UserData = {
   name: string;
@@ -49,6 +49,11 @@ const MitraDocumentManager = () => {
       id: "documents",
       label: "Dokumen",
       icon: <FileText className="h-5 w-5" />
+    },
+    {
+      id: "collaboration",
+      label: "Kolaborasi",
+      icon: <MessageCircle className="h-5 w-5" />
     },
     {
       id: "profile",
