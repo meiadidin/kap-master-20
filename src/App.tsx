@@ -19,6 +19,7 @@ import Footer from "./components/Footer";
 import Careers from "./pages/Careers";
 import ServiceOrderPage from "./pages/ServiceOrderPage";
 import AuditSchedule from "./pages/AuditSchedule";
+import Collaboration from "./pages/Collaboration"; // Import halaman Collaboration
 
 // Service Detail Pages
 import AuditKeuangan from "./pages/services/AuditKeuangan";

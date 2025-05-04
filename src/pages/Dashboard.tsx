@@ -1,12 +1,13 @@
 
 import { useState, useEffect } from "react";
 import { useNavigate, Routes, Route } from "react-router-dom";
-import { BarChart, Briefcase, Building, Clipboard, FileText, Home, LogOut, Minus, Plus, Settings, User, Users } from "lucide-react";
+import { BarChart, Briefcase, Building, Clipboard, FileText, Home, LogOut, Minus, Plus, Settings, User, Users, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
 import ClientsList from "@/components/dashboard/ClientsList";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
+import Collaboration from "@/pages/Collaboration"; // Import halaman Collaboration
 
 // Import komponen untuk Managing Partner dan Partner
 import ManagingPartnerKPI from "@/components/dashboard/ManagingPartnerKPI";
@@ -71,6 +72,7 @@ const Dashboard = () => {
         { icon: Briefcase, label: "Manajemen Tim", path: "/dashboard/team-management" },
         { icon: Clipboard, label: "Jadwal Audit", path: "/dashboard/audit-schedule" },
         { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+        { icon: MessageCircle, label: "Media Kolaborasi", path: "/dashboard/collaboration" },
         { icon: User, label: "Profil", path: "/dashboard/profile" },
         { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
       ];
@@ -84,6 +86,7 @@ const Dashboard = () => {
         { icon: Briefcase, label: "Manajemen Tim", path: "/dashboard/team-management" },
         { icon: Clipboard, label: "Jadwal Audit", path: "/dashboard/audit-schedule" },
         { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+        { icon: MessageCircle, label: "Media Kolaborasi", path: "/dashboard/collaboration" },
         { icon: User, label: "Profil", path: "/dashboard/profile" },
         { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
       ];
@@ -94,6 +97,7 @@ const Dashboard = () => {
       return [
         ...commonItems,
         { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+        { icon: MessageCircle, label: "Media Kolaborasi", path: "/dashboard/collaboration" },
         { icon: Users, label: "Pengguna", path: "/dashboard/users" },
         { icon: User, label: "Profil", path: "/dashboard/profile" },
         { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
@@ -104,6 +108,7 @@ const Dashboard = () => {
     return [
       ...commonItems,
       { icon: FileText, label: "Dokumen", path: "/dashboard/documents" },
+      { icon: MessageCircle, label: "Media Kolaborasi", path: "/dashboard/collaboration" },
       { icon: User, label: "Profil", path: "/dashboard/profile" },
       { icon: Settings, label: "Pengaturan", path: "/dashboard/settings" },
     ];
@@ -195,8 +200,6 @@ const Dashboard = () => {
           isMenuCollapsed ? "ml-16" : "ml-64"
         }`}
       >
-        {/* Hapus header yang berisi teks "Dashboard" dan button dengan nama pengguna */}
-        
         {/* Content */}
         <div className="p-6">
           <Routes>
@@ -205,6 +208,7 @@ const Dashboard = () => {
             <Route path="/documents" element={<DocumentsList currentUser={currentUser} />} />
             <Route path="/profile" element={<UserProfile currentUser={currentUser} />} />
             <Route path="/settings" element={<UserSettings currentUser={currentUser} />} />
+            <Route path="/collaboration" element={<Collaboration />} /> {/* Route untuk halaman Collaboration */}
             
             {/* Admin-specific routes */}
             {currentUser.role === "admin" && (

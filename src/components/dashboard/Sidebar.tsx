@@ -1,7 +1,7 @@
 
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { Home, Users, FileText, User, Settings } from "lucide-react";
+import { Home, Users, FileText, User, Settings, MessageCircle } from "lucide-react";
 
 type SidebarProps = {
   collapsed?: boolean;
@@ -43,6 +43,12 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
       icon: <FileText size={20} />,
       label: "Dokumen",
       path: "/dashboard/documents",
+      showFor: ['admin', 'manager', 'auditor', 'partner', 'managingpartner', 'client', 'mitra'],
+    },
+    {
+      icon: <MessageCircle size={20} />,
+      label: "Media Kolaborasi",
+      path: "/dashboard/collaboration",
       showFor: ['admin', 'manager', 'auditor', 'partner', 'managingpartner', 'client', 'mitra'],
     },
     {
