@@ -9,7 +9,7 @@ const Login = () => {
             <Link to="/" className="inline-block">
               <div className="flex flex-col items-center">
                 <div className="flex items-center">
-                  <span className="text-kap-navy font-merriweather font-bold text-lg">MGI Gideon Adi & Rekan</span>
+                  <span className="text-kap-navy font-merriweather font-bold text-lg">KAP</span>
                   <span className="text-kap-gold font-merriweather font-bold ml-1 text-lg">Surabaya</span>
                 </div>
                 <span className="text-gray-500 text-sm italic font-montserrat">a member of mgi worldwide</span>
