@@ -1,6 +1,17 @@
+
 import LoginForm from "@/components/LoginForm";
 import { Link } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+
 const Login = () => {
+  const { user } = useAuth();
+
+  // If user is already logged in, redirect to dashboard
+  if (user) {
+    return <Navigate to="/dashboard" />;
+  }
+
   return <div className="login-container">
       {/* Left side - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
@@ -24,7 +35,7 @@ const Login = () => {
           
           {/* Contact Information for Registration */}
           <div className="text-center text-sm text-gray-500 pt-4">
-            <p>Belum memiliki akun? Hubungi kami untuk registrasi</p>
+            <p>Belum memiliki akun? <Link to="/register" className="text-kap-blue hover:text-kap-navy font-medium">Daftar sekarang</Link></p>
             <div className="mt-2 flex flex-col sm:flex-row justify-center gap-2">
               <a href="tel:+62123456789" className="text-kap-blue hover:text-kap-navy font-medium">
                 (021) 2345-6789
@@ -67,4 +78,5 @@ const Login = () => {
       </div>
     </div>;
 };
+
 export default Login;

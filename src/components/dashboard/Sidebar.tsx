@@ -1,7 +1,9 @@
 
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import { Home, Users, FileText, User, Settings, MessageCircle } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Home, Users, FileText, User, Settings, MessageCircle, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { Button } from "@/components/ui/button";
 
 type SidebarProps = {
   collapsed?: boolean;
@@ -9,20 +11,36 @@ type SidebarProps = {
 
 const Sidebar = ({ collapsed = false }: SidebarProps) => {
   const location = useLocation();
-  const [currentUser, setCurrentUser] = useState<{name: string; role: string} | null>(null);
+  const navigate = useNavigate();
+  const { user, signOut } = useAuth();
+  const [userProfile, setUserProfile] = useState<{name: string; role: string} | null>(null);
   
   useEffect(() => {
-    // Get user data from session storage
-    const userDataString = sessionStorage.getItem('currentUser');
-    if (userDataString) {
-      const userData = JSON.parse(userDataString);
-      setCurrentUser(userData);
+    if (user) {
+      // Check for user metadata first
+      const userData = {
+        name: user.user_metadata?.name || "User",
+        role: user.user_metadata?.role || "client"
+      };
+      setUserProfile(userData);
     }
-  }, []);
+  }, [user]);
 
   const isActive = (path: string) => {
     return location.pathname === path || location.pathname.startsWith(`${path}/`);
   };
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login");
+  };
+
+  // Redirect to login if no user is found
+  useEffect(() => {
+    if (!user) {
+      navigate("/login");
+    }
+  }, [user, navigate]);
 
   // Define menu items array with conditional rendering based on role
   const menuItems = [
@@ -67,7 +85,7 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
 
   // Filter menu items based on user role
   const filteredMenuItems = menuItems.filter(item => 
-    currentUser && item.showFor.includes(currentUser.role)
+    userProfile && item.showFor.includes(userProfile.role)
   );
 
   return (
@@ -102,13 +120,27 @@ const Sidebar = ({ collapsed = false }: SidebarProps) => {
               </Link>
             </li>
           ))}
+          <li>
+            <Button
+              variant="ghost"
+              className="w-full flex items-center p-3 rounded-md transition-colors text-white hover:bg-blue-800 justify-start"
+              onClick={handleSignOut}
+            >
+              <span className="mr-3"><LogOut size={20} /></span>
+              {!collapsed && <span>Logout</span>}
+            </Button>
+          </li>
         </ul>
       </nav>
 
       <div className="p-4 border-t border-blue-900">
-        {!collapsed && (
-          <div className="text-xs text-center opacity-75">
-            &copy; {new Date().getFullYear()} KAP GAR
+        {!collapsed && userProfile && (
+          <div className="text-xs text-center">
+            <p className="font-medium">{userProfile.name}</p>
+            <p className="opacity-75 capitalize">{userProfile.role}</p>
+            <div className="mt-1 opacity-75">
+              &copy; {new Date().getFullYear()} KAP GAR
+            </div>
           </div>
         )}
       </div>

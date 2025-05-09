@@ -11,37 +11,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useNavigate } from "react-router-dom";
 import { Label } from "@/components/ui/label";
 import { Link } from "react-router-dom";
-
-// Dummy user data for different roles
-const dummyUsers = [
-  { email: "admin@kapgar.com", password: "admin123", role: "admin", name: "Admin Utama" },
-  { email: "admin2@kapgar.com", password: "admin123", role: "admin", name: "Admin Sekunder" },
-  { email: "manager@kapgar.com", password: "manager123", role: "manager", name: "Manager" },
-  { email: "auditor1@kapgar.com", password: "audit123", role: "auditor", name: "Auditor Senior" },
-  { email: "auditor2@kapgar.com", password: "audit123", role: "auditor", name: "Auditor Junior" },
-  { email: "client1@example.com", password: "client123", role: "client", name: "PT Maju Bersama" },
-  { email: "client2@example.com", password: "client123", role: "client", name: "CV Teknologi Nusantara" },
-  { email: "client3@example.com", password: "client123", role: "client", name: "PT Sejahtera Abadi" },
-  { email: "client4@example.com", password: "client123", role: "client", name: "PT Bintang Timur" },
-  { email: "client5@example.com", password: "client123", role: "client", name: "PT Global Indonesia" },
-  { email: "mitra1@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Utama" },
-  { email: "mitra2@kapgar.com", password: "mitra123", role: "mitra", name: "Mitra Partner" },
-  // Menambahkan user Managing Partner
-  { email: "managingpartner@kapgar.com", password: "managingpartner123", role: "managingpartner", name: "Dr. Gideon Setyo Budiwitjaksono" },
-  // Menambahkan user Partner
-  { email: "partner1@kapgar.com", password: "partner123", role: "partner", name: "Hendri Yanto" }
-];
+import { useAuth } from "@/contexts/AuthContext";
 
 const LoginForm = () => {
   const { toast } = useToast();
-  const navigate = useNavigate();
+  const { signIn } = useAuth();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    role: "admin"  // Mengubah default menjadi admin
+    role: "client"
   });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -66,45 +46,29 @@ const LoginForm = () => {
     setShowPassword(!showPassword);
   };
   
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
     
-    // Simulate login process
-    setTimeout(() => {
-      setLoading(false);
+    try {
+      const { success, error } = await signIn(formData.email, formData.password);
       
-      // Check if user exists in our dummy data
-      const user = dummyUsers.find(
-        user => 
-          user.email === formData.email && 
-          user.password === formData.password && 
-          (formData.role === "any" || user.role === formData.role)
-      );
-      
-      if (user) {
-        // Save user in session storage or context
-        sessionStorage.setItem('currentUser', JSON.stringify({
-          name: user.name,
-          email: user.email,
-          role: user.role
-        }));
-        
-        toast({
-          title: "Login Berhasil",
-          description: `Selamat datang kembali, ${user.name}`,
-        });
-        
-        // Redirect to dashboard
-        navigate("/dashboard");
-      } else {
+      if (!success) {
         toast({
           title: "Login Gagal",
-          description: "Email, password, atau tipe akun tidak valid. Silakan coba lagi.",
+          description: error || "Email atau password tidak valid. Silakan coba lagi.",
           variant: "destructive",
         });
       }
-    }, 1000);
+    } catch (error) {
+      toast({
+        title: "Login Gagal",
+        description: "Terjadi kesalahan saat login.",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -156,9 +120,9 @@ const LoginForm = () => {
             <Label htmlFor="password" className="block text-sm font-medium text-gray-900">
               Password
             </Label>
-            <a href="/lupa-password" className="text-sm text-kap-blue hover:text-kap-navy">
+            <Link to="/lupa-password" className="text-sm text-kap-blue hover:text-kap-navy">
               Lupa password?
-            </a>
+            </Link>
           </div>
           <div className="relative">
             <Input

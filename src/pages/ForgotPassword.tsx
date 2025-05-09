@@ -6,9 +6,11 @@ import { useToast } from "@/hooks/use-toast";
 import { Link } from "react-router-dom";
 import { Mail } from "lucide-react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { useAuth } from "@/contexts/AuthContext";
 
 const ForgotPassword = () => {
   const { toast } = useToast();
+  const { resetPassword } = useAuth();
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -18,7 +20,7 @@ const ForgotPassword = () => {
     return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   };
   
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (!isValidEmail(email)) {
@@ -32,15 +34,31 @@ const ForgotPassword = () => {
     
     setLoading(true);
     
-    // Simulate sending reset password email
-    setTimeout(() => {
-      setLoading(false);
-      setSubmitted(true);
+    try {
+      const { success, error } = await resetPassword(email);
+      
+      if (success) {
+        setSubmitted(true);
+        toast({
+          title: "Email Terkirim",
+          description: "Instruksi reset password telah dikirim ke email Anda.",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: error || "Terjadi kesalahan saat mengirim instruksi reset password.",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
       toast({
-        title: "Email Terkirim",
-        description: "Instruksi reset password telah dikirim ke email Anda.",
+        title: "Error",
+        description: "Terjadi kesalahan saat mengirim instruksi reset password.",
+        variant: "destructive",
       });
-    }, 1500);
+    } finally {
+      setLoading(false);
+    }
   };
   
   return (

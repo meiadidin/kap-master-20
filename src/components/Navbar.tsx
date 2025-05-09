@@ -1,12 +1,22 @@
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
-import { Menu, X, User } from "lucide-react";
+import { Menu, X, User, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { user, signOut } = useAuth();
+
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  const handleSignOut = async () => {
+    await signOut();
+  };
+
   return <nav className="sticky top-0 w-full bg-white shadow-md z-50">
       <div className="container mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
@@ -38,12 +48,32 @@ const Navbar = () => {
             <Link to="/kontak" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat">
               Kontak
             </Link>
-            <Link to="/login">
-              <Button className="bg-kap-navy hover:bg-kap-blue text-white flex items-center space-x-2">
-                <User size={18} />
-                <span>Login</span>
-              </Button>
-            </Link>
+            
+            {user ? (
+              <div className="flex items-center space-x-4">
+                <Link to="/dashboard">
+                  <Button className="bg-kap-navy hover:bg-kap-blue text-white flex items-center space-x-2">
+                    <User size={18} />
+                    <span>Dashboard</span>
+                  </Button>
+                </Link>
+                <Button 
+                  variant="outline" 
+                  className="border-kap-navy text-kap-navy hover:bg-kap-navy hover:text-white flex items-center space-x-2"
+                  onClick={handleSignOut}
+                >
+                  <LogOut size={18} />
+                  <span>Logout</span>
+                </Button>
+              </div>
+            ) : (
+              <Link to="/login">
+                <Button className="bg-kap-navy hover:bg-kap-blue text-white flex items-center space-x-2">
+                  <User size={18} />
+                  <span>Login</span>
+                </Button>
+              </Link>
+            )}
           </div>
 
           {/* Mobile Menu Button */}
@@ -72,13 +102,34 @@ const Navbar = () => {
               <Link to="/kontak" className="text-kap-navy hover:text-kap-blue font-medium font-montserrat" onClick={toggleMenu}>
                 Kontak
               </Link>
-              <Link to="/login" className="bg-kap-navy text-white py-2 px-4 rounded flex items-center justify-center space-x-2" onClick={toggleMenu}>
-                <User size={18} />
-                <span>Login</span>
-              </Link>
+              
+              {user ? (
+                <>
+                  <Link to="/dashboard" className="bg-kap-navy text-white py-2 px-4 rounded flex items-center justify-center space-x-2" onClick={toggleMenu}>
+                    <User size={18} />
+                    <span>Dashboard</span>
+                  </Link>
+                  <button 
+                    className="border border-kap-navy text-kap-navy py-2 px-4 rounded flex items-center justify-center space-x-2 w-full"
+                    onClick={() => {
+                      handleSignOut();
+                      toggleMenu();
+                    }}
+                  >
+                    <LogOut size={18} />
+                    <span>Logout</span>
+                  </button>
+                </>
+              ) : (
+                <Link to="/login" className="bg-kap-navy text-white py-2 px-4 rounded flex items-center justify-center space-x-2" onClick={toggleMenu}>
+                  <User size={18} />
+                  <span>Login</span>
+                </Link>
+              )}
             </div>
           </div>}
       </div>
     </nav>;
 };
+
 export default Navbar;
