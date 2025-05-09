@@ -42,10 +42,10 @@ import ManajemenRisiko from "./pages/services/ManajemenRisiko";
 const queryClient = new QueryClient();
 
 const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <BrowserRouter>
-      <AuthProvider>
-        <TooltipProvider>
+  <BrowserRouter>
+    <QueryClientProvider client={queryClient}>
+      <TooltipProvider>
+        <AuthProvider>
           <Toaster />
           <Sonner />
           <Routes>
@@ -157,10 +157,10 @@ const App = () => (
               } 
             />
           </Routes>
-        </TooltipProvider>
-      </AuthProvider>
-    </BrowserRouter>
-  </QueryClientProvider>
+        </AuthProvider>
+      </TooltipProvider>
+    </QueryClientProvider>
+  </BrowserRouter>
 );
 
 export default App;

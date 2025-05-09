@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
 import { useNavigate, Routes, Route } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 import { BarChart, Briefcase, Building, Clipboard, FileText, Home, LogOut, Minus, Plus, Settings, User, Users, MessageCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ClientsList from "@/components/dashboard/ClientsList";
 import DashboardOverview from "@/components/dashboard/DashboardOverview";
-import Collaboration from "@/pages/Collaboration"; // Import halaman Collaboration
+import Collaboration from "@/pages/Collaboration";
 
 // Import komponen untuk Managing Partner dan Partner
 import ManagingPartnerKPI from "@/components/dashboard/ManagingPartnerKPI";
@@ -17,33 +18,41 @@ import DocumentsList from "@/components/dashboard/DocumentsList";
 import UsersList from "@/components/dashboard/UsersManagement";
 import UserProfile from "@/components/dashboard/UserProfile";
 import UserSettings from "@/components/dashboard/UserSettings";
+
 const Dashboard = () => {
   const navigate = useNavigate();
+  const { user, signOut } = useAuth();
   const [currentUser, setCurrentUser] = useState<{
     name: string;
     email: string;
     role: string;
   } | null>(null);
   const [isMenuCollapsed, setIsMenuCollapsed] = useState(false);
+  
   useEffect(() => {
     // Check if user is logged in
-    const userData = sessionStorage.getItem("currentUser");
-    if (!userData) {
+    if (!user) {
       navigate("/login");
       return;
     }
+    
+    // Set currentUser from Supabase user data
+    setCurrentUser({
+      name: user.user_metadata?.name || user.email?.split('@')[0] || "User",
+      email: user.email || "",
+      role: user.user_metadata?.role || "client"
+    });
+  }, [user, navigate]);
+
+  const handleLogout = async () => {
     try {
-      const parsedUser = JSON.parse(userData);
-      setCurrentUser(parsedUser);
-    } catch (error) {
-      console.error("Failed to parse user data", error);
+      await signOut();
       navigate("/login");
+    } catch (error) {
+      console.error("Failed to log out", error);
     }
-  }, [navigate]);
-  const handleLogout = () => {
-    sessionStorage.removeItem("currentUser");
-    navigate("/login");
   };
+
   if (!currentUser) {
     return null; // Return null while checking authentication
   }
@@ -181,11 +190,18 @@ const Dashboard = () => {
         <div className="h-full flex flex-col">
           {/* Logo */}
           <div className="p-4 border-b border-blue-800 flex justify-between items-center">
-            {!isMenuCollapsed && <div className="flex flex-col">
+            {!isMenuCollapsed && (
+              <div className="flex flex-col">
                 <span className="font-bold text-lg truncate">MGI Gideon Adi</span>
                 <span className="text-xs text-gray-300">& Rekan SURABAYA</span>
-              </div>}
-            <Button variant="ghost" size="icon" className="text-white hover:bg-blue-800" onClick={() => setIsMenuCollapsed(!isMenuCollapsed)}>
+              </div>
+            )}
+            <Button 
+              variant="ghost" 
+              size="icon" 
+              className="text-white hover:bg-blue-800" 
+              onClick={() => setIsMenuCollapsed(!isMenuCollapsed)}
+            >
               {isMenuCollapsed ? <Plus size={18} /> : <Minus size={18} />}
             </Button>
           </div>
@@ -198,28 +214,40 @@ const Dashboard = () => {
                   {currentUser.name.charAt(0)}
                 </AvatarFallback>
               </Avatar>
-              {!isMenuCollapsed && <div className="flex flex-col">
+              {!isMenuCollapsed && (
+                <div className="flex flex-col">
                   <span className="font-medium">{currentUser.name}</span>
                   <span className="text-xs text-gray-300 capitalize">{currentUser.role}</span>
-                </div>}
+                </div>
+              )}
             </div>
           </div>
 
           {/* Navigation Links */}
           <nav className="flex-1 overflow-y-auto py-4">
             <ul className="space-y-1 px-2">
-              {menuItems.map((item, index) => <li key={index}>
-                  <Button variant="ghost" className={`w-full justify-start text-white hover:bg-blue-800 ${isMenuCollapsed ? "px-2" : "px-4"}`} onClick={() => navigate(item.path)}>
+              {menuItems.map((item, index) => (
+                <li key={index}>
+                  <Button 
+                    variant="ghost" 
+                    className={`w-full justify-start text-white hover:bg-blue-800 ${isMenuCollapsed ? "px-2" : "px-4"}`} 
+                    onClick={() => navigate(item.path)}
+                  >
                     <item.icon size={20} />
                     {!isMenuCollapsed && <span className="ml-3">{item.label}</span>}
                   </Button>
-                </li>)}
+                </li>
+              ))}
             </ul>
           </nav>
 
           {/* Logout Button */}
           <div className="p-4 border-t border-blue-800">
-            <Button variant="ghost" className="w-full justify-start text-white hover:bg-blue-800" onClick={handleLogout}>
+            <Button 
+              variant="ghost" 
+              className="w-full justify-start text-white hover:bg-blue-800" 
+              onClick={handleLogout}
+            >
               <LogOut size={20} />
               {!isMenuCollapsed && <span className="ml-3">Keluar</span>}
             </Button>
@@ -237,25 +265,29 @@ const Dashboard = () => {
             <Route path="/documents" element={<DocumentsList currentUser={currentUser} />} />
             <Route path="/profile" element={<UserProfile currentUser={currentUser} />} />
             <Route path="/settings" element={<UserSettings currentUser={currentUser} />} />
-            <Route path="/collaboration" element={<Collaboration />} /> {/* Route untuk halaman Collaboration */}
+            <Route path="/collaboration" element={<Collaboration />} /> {/* Route for Collaboration page */}
             
             {/* Admin-specific routes */}
             {currentUser.role === "admin" && <Route path="/users" element={<UsersList currentUser={currentUser} />} />}
             
             {/* Managing Partner routes */}
-            {currentUser.role === "managingpartner" && <>
+            {currentUser.role === "managingpartner" && (
+              <>
                 <Route path="/partner-performance" element={<PartnerPerformance />} />
                 <Route path="/financial-metrics" element={<FinancialMetrics />} />
                 <Route path="/team-management" element={<TeamManagement />} />
                 <Route path="/audit-schedule" element={<AuditSchedule />} />
-              </>}
+              </>
+            )}
             
             {/* Partner routes */}
-            {currentUser.role === "partner" && <>
+            {currentUser.role === "partner" && (
+              <>
                 <Route path="/kpi" element={<ManagingPartnerKPI />} />
                 <Route path="/team-management" element={<TeamManagement />} />
                 <Route path="/audit-schedule" element={<AuditSchedule />} />
-              </>}
+              </>
+            )}
             
             {/* Default route */}
             <Route path="*" element={<DashboardOverview currentUser={currentUser} />} />
@@ -264,4 +296,5 @@ const Dashboard = () => {
       </main>
     </div>;
 };
+
 export default Dashboard;
