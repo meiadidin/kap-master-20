@@ -1,7 +1,6 @@
 
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Index from "./pages/Index";
@@ -24,6 +23,7 @@ import TeamManagement from "./pages/TeamManagement";
 import ResetPassword from "./pages/ResetPassword";
 import Register from "./pages/Register";
 import { AuthProvider } from "./contexts/AuthContext";
+import { TooltipProvider } from "@/components/ui/tooltip";
 
 // Service Detail Pages
 import AuditKeuangan from "./pages/services/AuditKeuangan";
@@ -43,9 +43,9 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <BrowserRouter>
-        <AuthProvider>
+    <BrowserRouter>
+      <AuthProvider>
+        <TooltipProvider>
           <Toaster />
           <Sonner />
           <Routes>
@@ -157,9 +157,9 @@ const App = () => (
               } 
             />
           </Routes>
-        </AuthProvider>
-      </BrowserRouter>
-    </TooltipProvider>
+        </TooltipProvider>
+      </AuthProvider>
+    </BrowserRouter>
   </QueryClientProvider>
 );
 
